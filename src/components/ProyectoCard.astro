@@ -1,13 +1,13 @@
 ---
 import ProyectoCover from './ProyectoCover.astro';
-import { href } from '../i18n/config';
+import { link, type Locale } from '../i18n/config';
 import { t } from '../i18n/ui';
-interface Props { slug: string; nombre: string; categorias: string[]; tono: string; resumen?: string; eager?: boolean; nivel?: 'h2' | 'h3' }
-const { slug, nombre, categorias, tono, eager, nivel = 'h3' } = Astro.props;
+interface Props { locale?: Locale; slug: string; nombre: string; categorias: string[]; tono: string; resumen?: string; eager?: boolean; nivel?: 'h2' | 'h3' }
+const { locale = 'es', slug, nombre, categorias, tono, eager, nivel = 'h3' } = Astro.props;
 const H = nivel;
 ---
-<a class="caso" href={href(`/proyecto/${slug}/`)} data-cursor={t('es', 'verCaso')}>
-  <ProyectoCover slug={slug} nombre={nombre} tono={tono} eager={eager} />
+<a class="caso" href={link('proyecto', locale, slug)} data-cursor={t(locale, 'verCaso')}>
+  <ProyectoCover locale={locale} slug={slug} nombre={nombre} tono={tono} eager={eager} />
   <div class="caso__texto">
     <H class="caso__nombre">{nombre}</H>
     <p class="caso__cat">{categorias.join(' · ')}</p>

@@ -1,0 +1,61 @@
+---
+import Base from '../layouts/Base.astro';
+import CabeceraPagina from '../components/CabeceraPagina.astro';
+import Cta from '../components/Cta.astro';
+import { servicios, servicioPorSlug } from '../data/servicios';
+import { getCopy } from '../i18n/copy';
+import { equivalentes, link, type Locale } from '../i18n/config';
+import { t } from '../i18n/ui';
+import { breadcrumbs, service } from '../lib/schema';
+interface Props { locale: Locale; slug: string }
+const { locale, slug } = Astro.props;
+const c = getCopy(locale);
+const base = servicioPorSlug(slug)!;
+const s = c.servicios.items[base.slug];
+const origin = Astro.site!.toString().replace(/\/$/, '');
+const otros = servicios.filter((x) => x.slug !== base.slug);
+const abs = (path: string) => `${origin}${path}`;
+---
+<Base
+  locale={locale}
+  title={s.metaTitle}
+  description={s.metaDescription}
+  current="servicios"
+  alternates={equivalentes('servicio', base.slug)}
+  jsonLd={[
+    service(origin, base, locale),
+    breadcrumbs([
+      { name: t(locale, 'inicio'), url: abs(link('inicio', locale)) },
+      { name: c.servicios.migas, url: abs(link('servicios', locale)) },
+      { name: s.nombre, url: abs(link('servicio', locale, base.slug)) },
+    ]),
+  ]}
+>
+  <CabeceraPagina
+    locale={locale}
+    titulo={s.nombre}
+    lead={s.resumen}
+    alineacion="inicio"
+    migas={[{ name: t(locale, 'inicio'), href: link('inicio', locale) }, { name: c.servicios.migas, href: link('servicios', locale) }, { name: s.nombre }]}
+  />
+  <section class="seccion--compacta" data-tone="light" aria-label={c.servicios.detalleDe(s.nombre)}>
+    <div class="contenedor ficha__cuerpo">
+      <dl class="datos">
+        <div><dt>{c.servicios.paraQuien}</dt><dd>{s.paraQuien}</dd></div>
+        <div><dt>{c.servicios.queIncluye}</dt><dd><ul class="servicio__etiquetas tono-ink" style="margin-top:.5rem">{s.incluye.map((i) => <li>{i}</li>)}</ul></dd></div>
+      </dl>
+      <div class="texto">
+        {s.descripcion.map((d) => <p>{d}</p>)}
+      </div>
+    </div>
+  </section>
+  <section class="seccion" data-tone="dark" aria-labelledby="otros-titulo">
+    <div class="contenedor">
+      <div class="cabecera-seccion"><h2 id="otros-titulo">{c.servicios.otros}</h2></div>
+      <ul class="chips">
+        {otros.map((o) => <li><a class={`chip tono-${o.tono}`} href={link('servicio', locale, o.slug)}>{c.servicios.items[o.slug].nombre}</a></li>)}
+      </ul>
+    </div>
+  </section>
+  <Cta locale={locale} tone="light" />
+</Base>

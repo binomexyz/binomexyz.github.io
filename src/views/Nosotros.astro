@@ -1,0 +1,53 @@
+---
+import Base from '../layouts/Base.astro';
+import CabeceraPagina from '../components/CabeceraPagina.astro';
+import Persona from '../components/Persona.astro';
+import Cta from '../components/Cta.astro';
+import { site } from '../data/site';
+import { getCopy } from '../i18n/copy';
+import { equivalentes, link, type Locale } from '../i18n/config';
+import { t } from '../i18n/ui';
+import { breadcrumbs } from '../lib/schema';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const c = getCopy(locale);
+const n = c.nosotros;
+const origin = Astro.site!.toString().replace(/\/$/, '');
+const abs = (path: string) => `${origin}${path}`;
+---
+<Base
+  locale={locale}
+  title={n.title}
+  description={n.description}
+  tone="dark"
+  current="nosotros"
+  alternates={equivalentes('nosotros')}
+  jsonLd={[
+    { '@type': 'AboutPage', '@id': `${abs(link('nosotros', locale))}#page`, url: abs(link('nosotros', locale)), name: c.sobreBinome, about: { '@id': `${origin}/#organization` } },
+    breadcrumbs([{ name: t(locale, 'inicio'), url: abs(link('inicio', locale)) }, { name: n.migas, url: abs(link('nosotros', locale)) }]),
+  ]}
+>
+  <CabeceraPagina locale={locale} tone="dark" titulo={n.h1} migas={[{ name: t(locale, 'inicio'), href: link('inicio', locale) }, { name: n.migas }]} />
+  <section class="seccion--compacta seccion" data-tone="dark" aria-label={n.aria}>
+    <div class="contenedor texto" style="margin-inline:auto">
+      <p>{n.p1}</p>
+      <p>{n.p2}</p>
+      <p><em class="acento" style="font-size:var(--step-2)">{n.lema}</em></p>
+    </div>
+  </section>
+  <section class="seccion" data-tone="light" aria-labelledby="equipo-titulo">
+    <div class="contenedor">
+      <div class="cabecera-seccion"><h2 id="equipo-titulo">{n.equipoTitulo}</h2></div>
+      <div class="equipo">
+        {site.founders.map((f) => <Persona locale={locale} id={f.id} nombre={f.name} alias={f.alias} rol={c.fundadores[f.id].role} bio={c.fundadores[f.id].bio} />)}
+      </div>
+    </div>
+  </section>
+  <section class="seccion seccion--alt" data-tone="light" aria-labelledby="valores-titulo">
+    <div class="contenedor">
+      <div class="cabecera-seccion"><h2 id="valores-titulo">{n.valoresTitulo}</h2></div>
+      <ul class="porque">{n.valores.map((v) => <li><h3>{v.t}</h3><p>{v.d}</p></li>)}</ul>
+    </div>
+  </section>
+  <Cta locale={locale} tone="dark" />
+</Base>

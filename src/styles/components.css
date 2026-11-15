@@ -421,3 +421,13 @@
 @keyframes entra-t { from { transform: translateY(1.25rem); } }
 @keyframes entra { from { opacity: 0; transform: translateY(1.25rem); } }
 .seccion--alt[data-tone] { background: var(--surface-alt); }
+
+/* ───────── Idiomas: selector y aviso de traducción provisional ───────── */
+.selector-idioma ul { display: flex; flex-wrap: wrap; gap: 0 1.25rem; list-style: none; margin: 0; padding: 0; }
+.selector-idioma a[aria-current='true'] { text-decoration: underline; text-underline-offset: 0.2em; }
+.selector-idioma__marca { color: var(--text-muted); font-size: var(--step--1); }
+.aviso-traduccion {
+  position: relative; z-index: 40; padding: 0.6rem var(--space-gutter); text-align: center;
+  background: var(--color-ink-900); color: var(--color-cream-50); font-size: var(--step--1); line-height: 1.4;
+}
+.envoltorio { position: relative; }

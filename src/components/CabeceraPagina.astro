@@ -1,11 +1,12 @@
 ---
 import Breadcrumbs from './Breadcrumbs.astro';
-interface Props { titulo: string; lead?: string; migas?: { name: string; href?: string }[]; tone?: 'light' | 'dark'; alineacion?: 'centro' | 'inicio' }
-const { titulo, lead, migas, tone = 'light', alineacion = 'centro' } = Astro.props;
+import type { Locale } from '../i18n/config';
+interface Props { locale?: Locale; titulo: string; lead?: string; migas?: { name: string; href?: string }[]; tone?: 'light' | 'dark'; alineacion?: 'centro' | 'inicio' }
+const { locale = 'es', titulo, lead, migas, tone = 'light', alineacion = 'centro' } = Astro.props;
 ---
 <section class="seccion seccion--arriba cabpag" data-tone={tone} data-ali={alineacion}>
   <div class="contenedor">
-    {migas && <Breadcrumbs items={migas} />}
+    {migas && <Breadcrumbs items={migas} locale={locale} />}
     <h1 class="cabpag__titulo entra-t" set:html={titulo} />
     {lead && <p class="cabpag__lead entra entra--2">{lead}</p>}
   </div>

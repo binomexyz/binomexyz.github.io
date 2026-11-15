@@ -1,0 +1,19 @@
+---
+// Páginas legales (aviso legal y cookies). Texto pendiente de migrar desde Webflow: se muestra el aviso, noindex.
+import Base from '../layouts/Base.astro';
+import CabeceraPagina from '../components/CabeceraPagina.astro';
+import { getCopy } from '../i18n/copy';
+import { equivalentes, link, type Locale } from '../i18n/config';
+import { t } from '../i18n/ui';
+interface Props { locale: Locale; cual: 'legal' | 'cookies' }
+const { locale, cual } = Astro.props;
+const p = getCopy(locale)[cual];
+---
+<Base locale={locale} title={p.title} description={p.description} noindex alternates={equivalentes(cual)}>
+  <CabeceraPagina locale={locale} titulo={p.h1} alineacion="inicio" migas={[{ name: t(locale, 'inicio'), href: link('inicio', locale) }, { name: p.h1 }]} />
+  <section class="seccion--compacta seccion" data-tone="light">
+    <div class="contenedor texto">
+      <p class="aviso-borrador">{p.pendiente}</p>
+    </div>
+  </section>
+</Base>

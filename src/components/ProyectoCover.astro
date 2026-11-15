@@ -2,13 +2,15 @@
 // Portada de proyecto. Si existe src/assets/proyectos/<slug>/portada.(jpg|png|webp|avif) la usa;
 // si no, dibuja un marcador de posición honesto (campo de color + nombre) hasta tener el mockup exportado de Webflow.
 import { Image } from 'astro:assets';
-interface Props { slug: string; nombre: string; tono: string; sizes?: string; eager?: boolean }
-const { slug, nombre, tono, sizes = '(min-width: 900px) 50vw, 100vw', eager = false } = Astro.props;
+import { t } from '../i18n/ui';
+import type { Locale } from '../i18n/config';
+interface Props { locale?: Locale; slug: string; nombre: string; tono: string; sizes?: string; eager?: boolean }
+const { locale = 'es', slug, nombre, tono, sizes = '(min-width: 900px) 50vw, 100vw', eager = false } = Astro.props;
 const imgs = import.meta.glob<ImageMetadata>('/src/assets/proyectos/*/portada.{jpg,jpeg,png,webp,avif}', { eager: true, import: 'default' });
 const found = Object.entries(imgs).find(([p]) => p.includes(`/proyectos/${slug}/`))?.[1];
 ---
 <div class={`cover tono-${tono}`}>
   {found
-    ? <Image src={found} alt={`Mockup del proyecto ${nombre}`} widths={[480, 800, 1200]} sizes={sizes} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+    ? <Image src={found} alt={`${t(locale, 'mockup')} ${nombre}`} widths={[480, 800, 1200]} sizes={sizes} loading={eager ? 'eager' : 'lazy'} decoding="async" />
     : <span class="cover__pendiente" aria-hidden="true">{nombre}</span>}
 </div>

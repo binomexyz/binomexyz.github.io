@@ -2,6 +2,9 @@
 // pensado para buscadores y para motores de respuesta/LLMs (GEO/AEO).
 import { site } from '../data/site';
 import { servicios } from '../data/servicios';
+import { getCopy } from '../i18n/copy';
+import { htmlLang, link, type Locale } from '../i18n/config';
+import type { ServicioSlug } from '../i18n/copy/es';
 
 type Json = Record<string, unknown>;
 
@@ -11,8 +14,9 @@ export const ids = (origin: string) => ({
   person: (id: string) => `${origin}/nosotros/#${id}`,
 });
 
-export function organization(origin: string): Json {
+export function organization(origin: string, locale: Locale = 'es'): Json {
   const i = ids(origin);
+  const c = getCopy(locale);
   return {
     '@type': ['Organization', 'ProfessionalService'],
     '@id': i.org,
@@ -20,56 +24,56 @@ export function organization(origin: string): Json {
     legalName: site.legalName,
     alternateName: ['Binome', 'Binōme Studio'],
     url: `${origin}/`,
-    description:
-      'Estudio digital boutique en Madrid formado por dos diseñadores. Branding, páginas web, producto digital (UX/UI) y estrategia digital para empresas que quieren ganar autoridad online.',
-    slogan: 'Tu marca al nivel que tu negocio merece.',
+    description: c.orgDescripcion,
+    slogan: c.slogan,
     email: site.email,
     ...(site.phone ? { telephone: site.phone } : {}),
     foundingDate: String(site.founded),
     address: { '@type': 'PostalAddress', addressLocality: site.city, addressRegion: site.region, addressCountry: site.country },
     areaServed: [
       { '@type': 'City', name: 'Madrid' },
-      { '@type': 'Country', name: 'España' },
+      { '@type': 'Country', name: c.pais },
     ],
     knowsLanguage: [...site.languages],
     sameAs: Object.values(site.social),
     founder: site.founders.map((f) => ({ '@id': i.person(f.id) })),
     employee: site.founders.map((f) => ({ '@id': i.person(f.id) })),
-    knowsAbout: ['Branding', 'Diseño web', 'Webflow', 'UX/UI', 'Design systems', 'Motion design', 'SEO técnico', 'Accesibilidad web'],
+    knowsAbout: c.conocimientos,
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
-      name: 'Servicios de Binōme',
+      name: c.catalogo,
       itemListElement: servicios.map((s) => ({
         '@type': 'Offer',
-        itemOffered: { '@type': 'Service', name: s.nombre, description: s.resumen, url: `${origin}/servicios/${s.slug}/` },
+        itemOffered: { '@type': 'Service', name: c.servicios.items[s.slug].nombre, description: c.servicios.items[s.slug].resumen, url: `${origin}${link('servicio', locale, s.slug)}` },
       })),
     },
   };
 }
 
-export function website(origin: string): Json {
+export function website(origin: string, locale: Locale = 'es'): Json {
   const i = ids(origin);
   return {
     '@type': 'WebSite',
     '@id': i.web,
     url: `${origin}/`,
     name: site.name,
-    inLanguage: 'es-ES',
+    inLanguage: htmlLang[locale],
     publisher: { '@id': i.org },
   };
 }
 
-export function persons(origin: string): Json[] {
+export function persons(origin: string, locale: Locale = 'es'): Json[] {
   const i = ids(origin);
+  const c = getCopy(locale);
   return site.founders.map((f) => ({
     '@type': 'Person',
     '@id': i.person(f.id),
     name: f.name,
     alternateName: f.alias,
-    jobTitle: f.jobTitle,
-    description: f.bio,
+    jobTitle: c.fundadores[f.id].jobTitle,
+    description: c.fundadores[f.id].bio,
     worksFor: { '@id': i.org },
-    url: `${origin}/nosotros/`,
+    url: `${origin}${link('nosotros', locale)}`,
   }));
 }
 
@@ -87,26 +91,30 @@ export function faqPage(faqs: { q: string; a: string }[]): Json {
   };
 }
 
-export function service(origin: string, s: (typeof servicios)[number]): Json {
+export function service(origin: string, s: (typeof servicios)[number], locale: Locale = 'es'): Json {
+  const c = getCopy(locale);
+  const it = c.servicios.items[s.slug as ServicioSlug];
+  const url = `${origin}${link('servicio', locale, s.slug)}`;
   return {
     '@type': 'Service',
-    '@id': `${origin}/servicios/${s.slug}/#service`,
-    name: s.nombre,
-    description: s.resumen,
-    url: `${origin}/servicios/${s.slug}/`,
+    '@id': `${url}#service`,
+    name: it.nombre,
+    description: it.resumen,
+    url,
     provider: { '@id': ids(origin).org },
-    areaServed: { '@type': 'Country', name: 'España' },
-    serviceType: s.nombre,
+    areaServed: { '@type': 'Country', name: c.pais },
+    serviceType: it.nombre,
   };
 }
 
-export function creativeWork(origin: string, p: { slug: string; nombre: string; resumen: string; cliente?: string; web?: string; categorias: string[] }): Json {
+export function creativeWork(origin: string, locale: Locale, p: { slug: string; nombre: string; resumen: string; cliente?: string; web?: string; categorias: string[] }): Json {
+  const url = `${origin}${link('proyecto', locale, p.slug)}`;
   return {
     '@type': 'CreativeWork',
-    '@id': `${origin}/proyecto/${p.slug}/#work`,
+    '@id': `${url}#work`,
     name: p.nombre,
     description: p.resumen,
-    url: `${origin}/proyecto/${p.slug}/`,
+    url,
     creator: { '@id': ids(origin).org },
     keywords: p.categorias.join(', '),
     ...(p.cliente ? { sponsor: { '@type': 'Organization', name: p.cliente, ...(p.web ? { url: p.web } : {}) } } : {}),

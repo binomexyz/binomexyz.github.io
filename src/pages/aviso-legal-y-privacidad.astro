@@ -1,13 +1,4 @@
 ---
-import Base from '../layouts/Base.astro';
-import CabeceraPagina from '../components/CabeceraPagina.astro';
-import { href } from '../i18n/config';
+import Legal from '../views/Legal.astro';
 ---
-<Base title="Aviso legal y privacidad | Binōme" description="Aviso legal y política de privacidad de Binōme." noindex>
-  <CabeceraPagina titulo="Aviso legal y privacidad" alineacion="inicio" migas={[{ name: 'Inicio', href: href('/') }, { name: 'Aviso legal y privacidad' }]} />
-  <section class="seccion--compacta seccion" data-tone="light">
-    <div class="contenedor texto">
-      <p class="aviso-borrador">PENDIENTE DE MIGRAR: pegar aquí el texto legal íntegro vigente de la web actual de Webflow y revisarlo (titular, NIF, domicilio, base jurídica, derechos, cookies reales del nuevo sitio). Esta página va con noindex hasta entonces.</p>
-    </div>
-  </section>
-</Base>
+<Legal locale="es" cual="legal" />

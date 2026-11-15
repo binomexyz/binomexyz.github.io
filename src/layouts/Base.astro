@@ -13,7 +13,8 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { site } from '../data/site';
 import { t } from '../i18n/ui';
-import { defaultLocale, htmlLang, ogLocale, href, type Locale } from '../i18n/config';
+import { defaultLocale, htmlLang, ogLocale, href, esProvisional, localesIndexables, type Locale } from '../i18n/config';
+import { getCopy } from '../i18n/copy';
 import { graph, organization, website, persons } from '../lib/schema';
 import fuenteTitulos from '@fontsource/funnel-display/files/funnel-display-latin-700-normal.woff2?url';
 import fuenteCuerpo from '@fontsource/dm-sans/files/dm-sans-latin-400-normal.woff2?url';
@@ -46,7 +47,7 @@ const {
   current = '',
   type = 'website',
   image = '/og-default.png',
-  imageAlt = 'Binōme — estudio digital boutique en Madrid',
+  imageAlt = getCopy(locale).ogAlt,
   noindex = false,
   alternates,
   jsonLd = [],
@@ -58,11 +59,15 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 const imgAbs = image.startsWith('http') ? image : new URL(href(image), Astro.site).toString();
 const stagingNoindex = import.meta.env.PUBLIC_NOINDEX === 'true';
 const robots =
-  noindex || stagingNoindex
+  noindex || stagingNoindex || esProvisional(locale)
     ? 'noindex,nofollow'
     : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1';
 const alt = alternates ?? { [locale]: Astro.url.pathname };
-const ld = graph(organization(origin), website(origin), persons(origin), jsonLd);
+// hreflang: solo idiomas indexables (revisados) y solo desde páginas indexables. El selector de idioma usa todos los activos.
+const hreflangs = esProvisional(locale) ? [] : Object.entries(alt).filter(([l]) => localesIndexables.includes(l as Locale));
+const ld = graph(organization(origin, locale), website(origin, locale), persons(origin, locale), jsonLd);
+const provisional = esProvisional(locale);
+const Wrap = provisional ? 'div' : Fragment;
 ---
 
 <!doctype html>
@@ -76,11 +81,11 @@ const ld = graph(organization(origin), website(origin), persons(origin), jsonLd)
     <link rel="canonical" href={canonical} />
 
     {
-      Object.entries(alt).map(([l, path]) => (
+      hreflangs.map(([l, path]) => (
         <link rel="alternate" hreflang={htmlLang[l as Locale]} href={new URL(path as string, Astro.site).toString()} />
       ))
     }
-    {alt[defaultLocale] && <link rel="alternate" hreflang="x-default" href={new URL(alt[defaultLocale] as string, Astro.site).toString()} />}
+    {!provisional && alt[defaultLocale] && <link rel="alternate" hreflang="x-default" href={new URL(alt[defaultLocale] as string, Astro.site).toString()} />}
 
     <meta property="og:type" content={type} />
     <meta property="og:site_name" content={site.name} />
@@ -114,11 +119,14 @@ const ld = graph(organization(origin), website(origin), persons(origin), jsonLd)
   </head>
   <body>
     <a class="saltar" href="#contenido">{t(locale, 'skip')}</a>
-    <Header locale={locale} tone={tone} current={current} />
+    {provisional && <p class="aviso-traduccion" role="note">{t(locale, 'provisional')}</p>}
+    <Wrap {...(provisional ? { class: 'envoltorio' } : {})}>
+    <Header locale={locale} tone={tone} current={current} alternates={alt} />
     <main id="contenido" tabindex="-1">
       <slot />
     </main>
-    <Footer locale={locale} />
+    <Footer locale={locale} alternates={alt} />
+    </Wrap>
     <div class="cursor" aria-hidden="true" data-cursor-el><span></span></div>
     <script>
       import '../scripts/menu';

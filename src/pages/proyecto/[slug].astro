@@ -1,90 +1,11 @@
 ---
-import Base from '../../layouts/Base.astro';
-import Breadcrumbs from '../../components/Breadcrumbs.astro';
-import ProyectoCover from '../../components/ProyectoCover.astro';
-import Cta from '../../components/Cta.astro';
+import Proyecto from '../../views/Proyecto.astro';
 import { getProyectos } from '../../lib/proyectos';
-import { href } from '../../i18n/config';
-import { breadcrumbs, creativeWork } from '../../lib/schema';
 
 export async function getStaticPaths() {
   const proyectos = await getProyectos('es');
-  return proyectos.map((p) => ({ params: { slug: p.slug }, props: { p, todos: proyectos } }));
+  return proyectos.map((p) => ({ params: { slug: p.slug } }));
 }
-const { p, todos } = Astro.props;
-const d = p.data;
-const origin = Astro.site!.toString().replace(/\/$/, '');
-const otros = todos.filter((x) => x.slug !== p.slug);
-const metaDesc = d.resumen.length > 155 ? d.resumen.slice(0, 152).replace(/\s+\S*$/, '') + '…' : d.resumen;
+const { slug } = Astro.params;
 ---
-<Base
-  title={`${d.nombre} | ${d.categorias.join(', ')} — Binōme`}
-  description={metaDesc}
-  current="proyectos"
-  noindex={d.borrador}
-  type="article"
-  jsonLd={[
-    creativeWork(origin, { slug: p.slug, nombre: d.nombre, resumen: d.resumen, cliente: d.cliente, web: d.web, categorias: d.categorias }),
-    breadcrumbs([
-      { name: 'Inicio', url: `${origin}/` },
-      { name: 'Proyectos', url: `${origin}/proyectos/` },
-      { name: d.nombre, url: `${origin}/proyecto/${p.slug}/` },
-    ]),
-  ]}
->
-  <section class="seccion seccion--arriba" data-tone="light">
-    <div class="contenedor ficha__cabecera">
-      <div>
-        <Breadcrumbs items={[{ name: 'Inicio', href: href('/') }, { name: 'Proyectos', href: href('/proyectos/') }, { name: d.nombre }]} />
-        <h1 class="ficha__titulo entra-t">{d.nombre}</h1>
-        <p class="ficha__resumen entra entra--2">{d.resumen}</p>
-        <ul class="ficha__etiquetas">{d.categorias.map((c) => <li class="etiqueta">{c}</li>)}</ul>
-        {d.ubicacion && <p style="margin-top:1.25rem;color:var(--text-muted)">{d.ubicacion}</p>}
-      </div>
-      <ProyectoCover slug={p.slug} nombre={d.nombre} tono={d.tono} sizes="(min-width: 900px) 55vw, 100vw" eager />
-    </div>
-
-    {(d.contexto || d.reto || d.propuesta || d.cliente) && (
-      <div class="contenedor ficha__cuerpo">
-        <dl class="datos">
-          {d.cliente && <div><dt>Cliente</dt><dd>{d.cliente}</dd></div>}
-          {d.sector && <div><dt>Sector</dt><dd><ul>{d.sector.map((s) => <li>{s}</li>)}</ul></dd></div>}
-          {d.entregables && <div><dt>Entregables</dt><dd><ul>{d.entregables.map((s) => <li>{s}</li>)}</ul></dd></div>}
-          {d.web && <div><dt>Web</dt><dd><a href={d.web} rel="noopener" target="_blank">{d.web.replace(/^https?:\/\/(www\.)?/, '')}<span class="sr-only"> (se abre en una pestaña nueva)</span></a></dd></div>}
-        </dl>
-        <div class="relato">
-          {d.contexto && <div class="relato__contexto"><h2>Contexto</h2>{d.contexto.map((t) => <p>{t}</p>)}</div>}
-          {d.reto && <div><h2>El reto</h2><p>{d.reto}</p></div>}
-          {d.propuesta && <div><h2>Nuestra propuesta</h2><p>{d.propuesta}</p></div>}
-          {d.resultado && <div class="relato__contexto"><h2>Resultados</h2><p>{d.resultado}</p></div>}
-        </div>
-      </div>
-    )}
-    {d.borrador && (
-      <div class="contenedor">
-        <p class="aviso-borrador">{import.meta.env.DEV ? 'BORRADOR (solo visible en desarrollo): completar contexto, reto, propuesta, entregables, resultados medibles y mockups en src/assets/proyectos/' + p.slug + '/portada.jpg. Mientras esté en borrador, esta página va con noindex.' : 'Estamos preparando el caso completo.'}</p>
-      </div>
-    )}
-  </section>
-
-  {d.testimonio && (
-    <section class="seccion" data-tone="dark" aria-label="Testimonio del cliente">
-      <div class="contenedor">
-        <figure class="testimonio" style="margin:0">
-          <blockquote><p>{d.testimonio.texto}</p></blockquote>
-          <figcaption>{d.testimonio.autor}{d.testimonio.cargo ? `, ${d.testimonio.cargo}` : ''}{d.cliente ? ` — ${d.cliente}` : ''}</figcaption>
-        </figure>
-      </div>
-    </section>
-  )}
-
-  <section class="seccion--compacta seccion" data-tone="light" aria-labelledby="otros-titulo">
-    <div class="contenedor">
-      <div class="cabecera-seccion"><h2 id="otros-titulo" style="font-size:var(--step-2)">Otros proyectos</h2></div>
-      <ul class="chips">
-        {otros.map((o) => <li><a class={`chip tono-${o.data.tono}`} href={href(`/proyecto/${o.slug}/`)}>{o.data.nombre}</a></li>)}
-      </ul>
-    </div>
-  </section>
-  <Cta tone="light" />
-</Base>
+<Proyecto locale="es" slug={slug!} />
