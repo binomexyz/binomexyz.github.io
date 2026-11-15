@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro';
+import CabeceraPagina from '../components/CabeceraPagina.astro';
+import Persona from '../components/Persona.astro';
+import Cta from '../components/Cta.astro';
+import { site } from '../data/site';
+import { href } from '../i18n/config';
+import { breadcrumbs } from '../lib/schema';
+const origin = Astro.site!.toString().replace(/\/$/, '');
+const valores = [
+  { t: 'Trato directo', d: 'Hablas con quienes diseñan y construyen tu proyecto. Sin intermediarios.' },
+  { t: 'Criterio propio', d: 'Opinamos, proponemos y razonamos cada decisión de diseño.' },
+  { t: 'Compromiso real', d: 'Cada proyecto es nuestro desde el primer brief hasta el resultado final.' },
+  { t: 'Atención al detalle', d: 'Nos encanta el detalle, pero sobre todo nos mueve el resultado.' },
+];
+---
+<Base
+  title="Nosotros | Un dúo creativo con base en Madrid — Binōme"
+  description="Somos Binōme: Álvaro Fabre y Betsabé Meneses. Dos diseñadores con trato directo, criterio propio y compromiso real en cada proyecto."
+  tone="dark"
+  current="nosotros"
+  jsonLd={[
+    { '@type': 'AboutPage', '@id': `${origin}/nosotros/#page`, url: `${origin}/nosotros/`, name: 'Sobre Binōme', about: { '@id': `${origin}/#organization` } },
+    breadcrumbs([{ name: 'Inicio', url: `${origin}/` }, { name: 'Nosotros', url: `${origin}/nosotros/` }]),
+  ]}
+>
+  <CabeceraPagina tone="dark" titulo={'Somos Binōme. Un <em class="acento">dúo creativo</em> con base en Madrid.'} migas={[{ name: 'Inicio', href: href('/') }, { name: 'Nosotros' }]} />
+  <section class="seccion--compacta seccion" data-tone="dark" aria-label="Quiénes somos">
+    <div class="contenedor texto" style="margin-inline:auto">
+      <p>Después de años en agencias y proyectos muy distintos, decidimos hacer las cosas a nuestra manera: con trato directo, criterio propio y un compromiso real con cada proyecto. Sin capas. Sin intermediarios. Solo nosotros dos, desde el primer brief hasta el resultado final.</p>
+      <p>Creamos experiencias digitales que fluyen, que conectan y que no se olvidan. Nos encanta el detalle, pero sobre todo nos mueve el resultado.</p>
+      <p><em class="acento" style="font-size:var(--step-2)">Nunca solo. Siempre en Binōme.</em></p>
+    </div>
+  </section>
+  <section class="seccion" data-tone="light" aria-labelledby="equipo-titulo">
+    <div class="contenedor">
+      <div class="cabecera-seccion"><h2 id="equipo-titulo">Dos creadores, una visión compartida</h2></div>
+      <div class="equipo">
+        {site.founders.map((f) => <Persona id={f.id} nombre={f.name} alias={f.alias} rol={f.role} bio={f.bio} />)}
+      </div>
+    </div>
+  </section>
+  <section class="seccion seccion--alt" data-tone="light" aria-labelledby="valores-titulo">
+    <div class="contenedor">
+      <div class="cabecera-seccion"><h2 id="valores-titulo">Cómo entendemos el trabajo</h2></div>
+      <ul class="porque">{valores.map((v) => <li><h3>{v.t}</h3><p>{v.d}</p></li>)}</ul>
+    </div>
+  </section>
+  <Cta tone="dark" />
+</Base>

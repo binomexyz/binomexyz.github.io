@@ -1,0 +1,56 @@
+---
+import Base from '../../layouts/Base.astro';
+import CabeceraPagina from '../../components/CabeceraPagina.astro';
+import Cta from '../../components/Cta.astro';
+import { servicios, servicioPorSlug } from '../../data/servicios';
+import { href } from '../../i18n/config';
+import { breadcrumbs, service } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return servicios.map((s) => ({ params: { slug: s.slug } }));
+}
+const { slug } = Astro.params;
+const s = servicioPorSlug(slug!)!;
+const origin = Astro.site!.toString().replace(/\/$/, '');
+const otros = servicios.filter((x) => x.slug !== s.slug);
+---
+<Base
+  title={s.metaTitle}
+  description={s.metaDescription}
+  current="servicios"
+  jsonLd={[
+    service(origin, s),
+    breadcrumbs([
+      { name: 'Inicio', url: `${origin}/` },
+      { name: 'Servicios', url: `${origin}/servicios/` },
+      { name: s.nombre, url: `${origin}/servicios/${s.slug}/` },
+    ]),
+  ]}
+>
+  <CabeceraPagina
+    titulo={s.nombre}
+    lead={s.resumen}
+    alineacion="inicio"
+    migas={[{ name: 'Inicio', href: href('/') }, { name: 'Servicios', href: href('/servicios/') }, { name: s.nombre }]}
+  />
+  <section class="seccion--compacta" data-tone="light" aria-label={`Detalle de ${s.nombre}`}>
+    <div class="contenedor ficha__cuerpo">
+      <dl class="datos">
+        <div><dt>Para quién</dt><dd>{s.paraQuien}</dd></div>
+        <div><dt>Qué incluye</dt><dd><ul class="servicio__etiquetas tono-ink" style="margin-top:.5rem">{s.incluye.map((i) => <li>{i}</li>)}</ul></dd></div>
+      </dl>
+      <div class="texto">
+        {s.descripcion.map((d) => <p>{d}</p>)}
+      </div>
+    </div>
+  </section>
+  <section class="seccion" data-tone="dark" aria-labelledby="otros-titulo">
+    <div class="contenedor">
+      <div class="cabecera-seccion"><h2 id="otros-titulo">Otros servicios</h2></div>
+      <ul class="chips">
+        {otros.map((o) => <li><a class={`chip tono-${o.tono}`} href={href(`/servicios/${o.slug}/`)}>{o.nombre}</a></li>)}
+      </ul>
+    </div>
+  </section>
+  <Cta tone="light" />
+</Base>

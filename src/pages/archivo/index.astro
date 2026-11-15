@@ -1,0 +1,30 @@
+---
+import Base from '../../layouts/Base.astro';
+import CabeceraPagina from '../../components/CabeceraPagina.astro';
+import Cta from '../../components/Cta.astro';
+import { categorias } from '../../data/categorias';
+import { getArticulos } from '../../lib/proyectos';
+import { href } from '../../i18n/config';
+import { breadcrumbs } from '../../lib/schema';
+import Notas from '../../components/Notas.astro';
+const articulos = await getArticulos('es');
+const origin = Astro.site!.toString().replace(/\/$/, '');
+---
+<Base
+  title="Archivo | Inspiración, consejos y procesos creativos — Binōme"
+  description="Ideas, guías y recursos sobre diseño web, branding, UX/UI, motion e IA desde el estudio. Aprende con lo que usamos cada día."
+  current="archivo"
+  jsonLd={[breadcrumbs([{ name: 'Inicio', url: `${origin}/` }, { name: 'Archivo', url: `${origin}/archivo/` }])]}
+>
+  <CabeceraPagina titulo="Archivo" lead="Inspiración, consejos y procesos creativos." migas={[{ name: 'Inicio', href: href('/') }, { name: 'Archivo' }]} />
+  <section class="seccion--compacta seccion" data-tone="light" aria-label="Artículos">
+    <div class="contenedor">
+      <ul class="chips" style="justify-content:center;margin-bottom:3rem" aria-label="Filtrar por categoría">
+        <li><a class="chip" href={href('/archivo/')} aria-current="page">Todo</a></li>
+        {categorias.map((c) => <li><a class={`chip tono-${c.tono}`} href={href(`/archivo/categoria/${c.slug}/`)}>{c.nombre}</a></li>)}
+      </ul>
+      <Notas articulos={articulos} />
+    </div>
+  </section>
+  <Cta tone="light" />
+</Base>

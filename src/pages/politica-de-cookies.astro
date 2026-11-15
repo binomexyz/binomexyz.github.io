@@ -1,0 +1,13 @@
+---
+import Base from '../layouts/Base.astro';
+import CabeceraPagina from '../components/CabeceraPagina.astro';
+import { href } from '../i18n/config';
+---
+<Base title="Política de cookies | Binōme" description="Información sobre el uso de cookies en binome.xyz." noindex>
+  <CabeceraPagina titulo="Política de cookies" alineacion="inicio" migas={[{ name: 'Inicio', href: href('/') }, { name: 'Política de cookies' }]} />
+  <section class="seccion--compacta seccion" data-tone="light">
+    <div class="contenedor texto">
+      <p class="aviso-borrador">PENDIENTE DE MIGRAR: pegar aquí el texto legal íntegro vigente de la web actual de Webflow y revisarlo (titular, NIF, domicilio, base jurídica, derechos, cookies reales del nuevo sitio). Esta página va con noindex hasta entonces.</p>
+    </div>
+  </section>
+</Base>

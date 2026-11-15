@@ -1,0 +1,37 @@
+---
+import Base from '../../../layouts/Base.astro';
+import CabeceraPagina from '../../../components/CabeceraPagina.astro';
+import Cta from '../../../components/Cta.astro';
+import Notas from '../../../components/Notas.astro';
+import { categorias, categoriaPorSlug } from '../../../data/categorias';
+import { getArticulos } from '../../../lib/proyectos';
+import { href } from '../../../i18n/config';
+import { breadcrumbs } from '../../../lib/schema';
+
+export function getStaticPaths() {
+  return categorias.map((c) => ({ params: { cat: c.slug } }));
+}
+const c = categoriaPorSlug(Astro.params.cat!)!;
+const todos = await getArticulos('es');
+const articulos = todos.filter((a) => a.data.categoria === c.slug);
+const origin = Astro.site!.toString().replace(/\/$/, '');
+---
+<Base
+  title={`${c.nombre} | Archivo — Binōme`}
+  description={`${c.descripcion} Artículos y guías del estudio Binōme.`}
+  current="archivo"
+  noindex={articulos.length === 0}
+  jsonLd={[breadcrumbs([{ name: 'Inicio', url: `${origin}/` }, { name: 'Archivo', url: `${origin}/archivo/` }, { name: c.nombre, url: `${origin}/archivo/categoria/${c.slug}/` }])]}
+>
+  <CabeceraPagina titulo={c.nombre} lead={c.descripcion} migas={[{ name: 'Inicio', href: href('/') }, { name: 'Archivo', href: href('/archivo/') }, { name: c.nombre }]} />
+  <section class="seccion--compacta seccion" data-tone="light" aria-label="Artículos">
+    <div class="contenedor">
+      <ul class="chips" style="justify-content:center;margin-bottom:3rem" aria-label="Filtrar por categoría">
+        <li><a class="chip" href={href('/archivo/')}>Todo</a></li>
+        {categorias.map((x) => <li><a class={`chip tono-${x.tono}`} href={href(`/archivo/categoria/${x.slug}/`)} aria-current={x.slug === c.slug ? 'page' : undefined}>{x.nombre}</a></li>)}
+      </ul>
+      <Notas articulos={articulos} />
+    </div>
+  </section>
+  <Cta tone="light" />
+</Base>

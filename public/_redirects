@@ -1,0 +1,5 @@
+# Redirecciones 301 (Cloudflare Pages / Netlify). GitHub Pages NO las soporta.
+# Las URLs se mantienen iguales que en Webflow; solo se normaliza la barra final (la gestiona el host).
+# Rellenar tras comprobar en Search Console las URLs antiguas con tráfico, p. ej.:
+# /blog-diseno-branding-ux-ui  /archivo/  301
+# /blog/:slug                  /archivo/:slug/  301   # confirmar patrón real de los artículos en Webflow

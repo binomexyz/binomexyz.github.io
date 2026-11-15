@@ -1,0 +1,19 @@
+---
+import Breadcrumbs from './Breadcrumbs.astro';
+interface Props { titulo: string; lead?: string; migas?: { name: string; href?: string }[]; tone?: 'light' | 'dark'; alineacion?: 'centro' | 'inicio' }
+const { titulo, lead, migas, tone = 'light', alineacion = 'centro' } = Astro.props;
+---
+<section class="seccion seccion--arriba cabpag" data-tone={tone} data-ali={alineacion}>
+  <div class="contenedor">
+    {migas && <Breadcrumbs items={migas} />}
+    <h1 class="cabpag__titulo entra-t" set:html={titulo} />
+    {lead && <p class="cabpag__lead entra entra--2">{lead}</p>}
+  </div>
+</section>
+<style>
+  .cabpag { padding-bottom: calc(var(--space-section) * 0.5); }
+  .cabpag__titulo { margin-top: clamp(2rem, 6vw, 4.5rem); max-width: 16ch; }
+  .cabpag__lead { margin-top: var(--space-6); max-width: 40ch; font-size: var(--step-1); line-height: 1.45; color: var(--text-muted); }
+  [data-ali='centro'] .cabpag__titulo, [data-ali='centro'] .cabpag__lead { margin-inline: auto; text-align: center; }
+  [data-ali='centro'] :global(.migas ol) { justify-content: center; }
+</style>

@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import CabeceraPagina from '../components/CabeceraPagina.astro';
+import ProyectoCard from '../components/ProyectoCard.astro';
+import Cta from '../components/Cta.astro';
+import { getProyectos } from '../lib/proyectos';
+import { href } from '../i18n/config';
+import { breadcrumbs } from '../lib/schema';
+const proyectos = await getProyectos('es');
+const origin = Astro.site!.toString().replace(/\/$/, '');
+const lista = {
+  '@type': 'ItemList',
+  itemListElement: proyectos.map((p, i) => ({ '@type': 'ListItem', position: i + 1, url: `${origin}/proyecto/${p.slug}/`, name: p.data.nombre })),
+};
+---
+<Base
+  title="Proyectos | Branding, UX/UI, web y motion — Binōme"
+  description="Casos de branding, diseño UX/UI, webs y motion de Binōme: de Contazara a Happy Life. Estudio digital boutique en Madrid."
+  current="proyectos"
+  jsonLd={[lista, breadcrumbs([{ name: 'Inicio', url: `${origin}/` }, { name: 'Proyectos', url: `${origin}/proyectos/` }])]}
+>
+  <CabeceraPagina titulo={'Convertimos ideas en <em class="acento">resultados</em>'} migas={[{ name: 'Inicio', href: href('/') }, { name: 'Proyectos' }]} />
+  <section class="seccion--compacta" data-tone="light" aria-label="Casos">
+    <div class="contenedor">
+      <div class="casos">
+        {proyectos.map((p, i) => <ProyectoCard slug={p.slug} nombre={p.data.nombre} categorias={p.data.categorias} tono={p.data.tono} eager={i < 2} nivel="h2" />)}
+      </div>
+    </div>
+  </section>
+  <Cta tone="light" />
+</Base>

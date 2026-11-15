@@ -1,0 +1,102 @@
+/* GENERADO por scripts/build-tokens.mjs desde design-system/tokens.json — NO EDITAR A MANO */
+:root {
+  --color-cream-50: #FDF9F0;
+  --color-cream-100: #EFEBE2;
+  --color-cream-200: #E2DDD1;
+  --color-ink-300: #B9B4AA;
+  --color-ink-500: #5F5A52;
+  --color-ink-700: #2B2B2B;
+  --color-ink-800: #1A1A1A;
+  --color-ink-900: #0A0A0A;
+  --color-coral-100: #FBD9D3;
+  --color-coral-300: #F7A396;
+  --color-coral-500: #F26654;
+  --color-coral-600: #DB4A38;
+  --color-coral-700: #B83A2B;
+  --color-coral-800: #8C2C20;
+  --color-coral-900: #5C1D15;
+  --color-yellow-500: #E6A700;
+  --color-green-500: #71CEA8;
+  --color-lavender-500: #A49BF5;
+  --font-display: 'Funnel Display', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'DM Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-accent: 'DM Serif Text', Georgia, 'Times New Roman', serif;
+  --peso-regular: 400;
+  --peso-medium: 500;
+  --peso-bold: 700;
+  --step-0: clamp(1rem, 0.96rem + 0.18vw, 1.125rem);
+  --step-1: clamp(1.25rem, 1.15rem + 0.45vw, 1.5rem);
+  --step-2: clamp(1.5rem, 1.3rem + 0.9vw, 2rem);
+  --step-3: clamp(2rem, 1.6rem + 1.8vw, 3rem);
+  --step-4: clamp(2.5rem, 1.9rem + 2.7vw, 4.25rem);
+  --step-5: clamp(3rem, 2rem + 4.5vw, 6rem);
+  --step--1: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
+  --leading-tight: 1.04;
+  --leading-snug: 1.18;
+  --leading-normal: 1.6;
+  --tracking-display: -0.035em;
+  --tracking-heading: -0.02em;
+  --tracking-label: 0.06em;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-section: clamp(5rem, 3rem + 8vw, 11rem);
+  --space-gutter: clamp(1.25rem, 0.5rem + 3vw, 3rem);
+  --radius-sm: 0.75rem;
+  --radius-card: 1.5rem;
+  --radius-pill: 9999px;
+  --layout-container: 90rem;
+  --layout-measure: 68ch;
+  --layout-target: 2.75rem;
+  --shadow-lift: 0 1px 2px rgb(10 10 10 / 0.06), 0 12px 32px -8px rgb(10 10 10 / 0.18);
+  --motion-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-fast: 180ms;
+  --motion-base: 420ms;
+  --motion-slow: 900ms;
+
+  /* Tono por defecto: claro */
+  --surface: #FDF9F0;
+  --surface-alt: #EFEBE2;
+  --text: #0A0A0A;
+  --text-muted: #5F5A52;
+  --line: rgb(10 10 10 / 0.18);
+  --accent: #F26654;
+  --accent-text: #B83A2B;
+  --accent-display: #DB4A38;
+  --on-accent: #0A0A0A;
+  --focus: #0A0A0A;
+  color-scheme: light;
+}
+
+[data-tone='light'] {
+  --surface: #FDF9F0;
+  --surface-alt: #EFEBE2;
+  --text: #0A0A0A;
+  --text-muted: #5F5A52;
+  --line: rgb(10 10 10 / 0.18);
+  --accent: #F26654;
+  --accent-text: #B83A2B;
+  --accent-display: #DB4A38;
+  --on-accent: #0A0A0A;
+  --focus: #0A0A0A;
+  color-scheme: light;
+}
+
+[data-tone='dark'] {
+  --surface: #0A0A0A;
+  --surface-alt: #1A1A1A;
+  --text: #FDF9F0;
+  --text-muted: #B9B4AA;
+  --line: rgb(253 249 240 / 0.22);
+  --accent: #F26654;
+  --accent-text: #F26654;
+  --accent-display: #F26654;
+  --on-accent: #0A0A0A;
+  --focus: #FDF9F0;
+  color-scheme: dark;
+}

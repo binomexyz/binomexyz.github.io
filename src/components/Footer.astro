@@ -1,0 +1,37 @@
+---
+import Icono from './Icono.astro';
+import Wordmark from './Wordmark.astro';
+import { nav, site } from '../data/site';
+import { t } from '../i18n/ui';
+import { href, type Locale } from '../i18n/config';
+interface Props { locale?: Locale }
+const { locale = 'es' } = Astro.props;
+const year = new Date().getFullYear();
+---
+<footer class="pie" data-tone="dark">
+  <div class="contenedor pie__cuerpo">
+    <nav aria-label="Pie de página" class="pie__nav">
+      <ul class="pie__principal">
+        {nav.map((i) => <li><a href={href(i.href, locale)}>{i.label}</a></li>)}
+      </ul>
+      <ul class="pie__redes">
+        <li><a href={site.social.instagram} rel="me noopener" target="_blank" aria-label="Instagram (se abre en una pestaña nueva)"><Icono nombre="instagram" tamano={24} /></a></li>
+        <li><a href={site.social.linkedin} rel="me noopener" target="_blank" aria-label="LinkedIn (se abre en una pestaña nueva)"><Icono nombre="linkedin" tamano={24} /></a></li>
+        <li><a href={href('/archivo/', locale)}>{t(locale, 'archivo')}</a></li>
+      </ul>
+    </nav>
+    <address class="pie__contacto">
+      <a href={`mailto:${site.email}`}>{site.email}</a>
+      <span>{site.tagline}</span>
+    </address>
+    <ul class="pie__legal">
+      <li><a href={href('/aviso-legal-y-privacidad/', locale)}>{t(locale, 'legal')}</a></li>
+      <li><a href={href('/politica-de-cookies/', locale)}>{t(locale, 'cookies')}</a></li>
+      <li><small>© {year} {site.legalName}</small></li>
+    </ul>
+    <a class="pie__arriba" href="#contenido" aria-label={t(locale, 'volverArriba')} data-arriba><Icono nombre="flecha-arriba" tamano={22} /></a>
+  </div>
+  <div class="pie__marca" data-wordmark>
+    <Wordmark />
+  </div>
+</footer>

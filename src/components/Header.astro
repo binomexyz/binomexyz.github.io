@@ -1,0 +1,42 @@
+---
+import Icono from './Icono.astro';
+import { nav, site } from '../data/site';
+import { t } from '../i18n/ui';
+import { href, type Locale } from '../i18n/config';
+interface Props { locale?: Locale; tone?: 'light' | 'dark'; current?: string }
+const { locale = 'es', tone = 'light', current = '' } = Astro.props;
+---
+<header class="cabecera" data-tone={tone}>
+  <a class="logo" href={href('/', locale)} aria-label={`${site.name} — inicio`}>binōme</a>
+
+  <!-- Sin JavaScript: navegación visible en línea. Con JavaScript: botón + menú a pantalla completa. -->
+  <nav class="cabecera__nav" aria-label={t(locale, 'navPrincipal')}>
+    <ul>
+      {nav.map((i) => <li><a href={href(i.href, locale)} aria-current={current === i.key ? 'page' : undefined}>{i.label}</a></li>)}
+      <li><a href={href('/archivo/', locale)} aria-current={current === 'archivo' ? 'page' : undefined}>{t(locale, 'archivo')}</a></li>
+    </ul>
+  </nav>
+
+  <button class="menu-boton" type="button" aria-haspopup="dialog" aria-controls="menu" aria-expanded="false" data-menu-abrir>
+    <span class="menu-boton__punto" aria-hidden="true"></span>{t(locale, 'menu')}
+  </button>
+
+  <dialog class="menu" id="menu" aria-label={t(locale, 'menuTitulo')} data-tone="dark">
+    <div class="menu__barra">
+      <span class="logo" aria-hidden="true">binōme</span>
+      <button class="menu__cerrar" type="button" data-menu-cerrar aria-label={t(locale, 'cerrar')}><Icono nombre="cerrar" tamano={22} /></button>
+    </div>
+    <nav class="menu__nav" aria-label={t(locale, 'menuTitulo')}>
+      <ul>
+        {nav.map((i) => <li><a class="menu__enlace" href={href(i.href, locale)} aria-current={current === i.key ? 'page' : undefined}>{i.label}</a></li>)}
+      </ul>
+    </nav>
+    <div class="menu__pie">
+      <ul class="menu__redes">
+        <li><a href={site.social.instagram} rel="me noopener" target="_blank">instagram<span class="sr-only"> (se abre en una pestaña nueva)</span></a></li>
+        <li><a href={site.social.linkedin} rel="me noopener" target="_blank">linkedin<span class="sr-only"> (se abre en una pestaña nueva)</span></a></li>
+      </ul>
+      <a class="menu__secundario" href={href('/archivo/', locale)}>{t(locale, 'archivo')}</a>
+    </div>
+  </dialog>
+</header>

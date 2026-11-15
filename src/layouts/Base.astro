@@ -1,0 +1,130 @@
+---
+import '@fontsource/funnel-display/500.css';
+import '@fontsource/funnel-display/700.css';
+import '@fontsource/dm-sans/400.css';
+import '@fontsource/dm-sans/500.css';
+import '@fontsource/dm-serif-text/400-italic.css';
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/layout.css';
+import '../styles/components.css';
+
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+import { t } from '../i18n/ui';
+import { defaultLocale, htmlLang, ogLocale, href, type Locale } from '../i18n/config';
+import { graph, organization, website, persons } from '../lib/schema';
+import fuenteTitulos from '@fontsource/funnel-display/files/funnel-display-latin-700-normal.woff2?url';
+import fuenteCuerpo from '@fontsource/dm-sans/files/dm-sans-latin-400-normal.woff2?url';
+
+interface Props {
+  title: string;
+  description: string;
+  locale?: Locale;
+  /** Tono de la primera sección (el logo y el botón de menú se adaptan). */
+  tone?: 'light' | 'dark';
+  /** Ruta activa del menú. */
+  current?: string;
+  type?: 'website' | 'article';
+  image?: string;
+  imageAlt?: string;
+  noindex?: boolean;
+  /** Otras versiones de idioma que EXISTEN para esta página: { es: '/servicios/', fr: '/fr/services/' } */
+  alternates?: Partial<Record<Locale, string>>;
+  /** Entidades JSON-LD adicionales de la página. */
+  jsonLd?: Record<string, unknown>[];
+  /** Fecha de publicación (artículos). */
+  articlePublished?: Date;
+}
+
+const {
+  title,
+  description,
+  locale = defaultLocale,
+  tone = 'light',
+  current = '',
+  type = 'website',
+  image = '/og-default.png',
+  imageAlt = 'Binōme — estudio digital boutique en Madrid',
+  noindex = false,
+  alternates,
+  jsonLd = [],
+  articlePublished,
+} = Astro.props;
+
+const origin = (Astro.site ?? new URL('https://binome.xyz')).toString().replace(/\/$/, '');
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+const imgAbs = image.startsWith('http') ? image : new URL(href(image), Astro.site).toString();
+const stagingNoindex = import.meta.env.PUBLIC_NOINDEX === 'true';
+const robots =
+  noindex || stagingNoindex
+    ? 'noindex,nofollow'
+    : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1';
+const alt = alternates ?? { [locale]: Astro.url.pathname };
+const ld = graph(organization(origin), website(origin), persons(origin), jsonLd);
+---
+
+<!doctype html>
+<html lang={htmlLang[locale].slice(0, 2)} class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
+    <link rel="canonical" href={canonical} />
+
+    {
+      Object.entries(alt).map(([l, path]) => (
+        <link rel="alternate" hreflang={htmlLang[l as Locale]} href={new URL(path as string, Astro.site).toString()} />
+      ))
+    }
+    {alt[defaultLocale] && <link rel="alternate" hreflang="x-default" href={new URL(alt[defaultLocale] as string, Astro.site).toString()} />}
+
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={ogLocale[locale]} />
+    <meta property="og:image" content={imgAbs} />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    {articlePublished && <meta property="article:published_time" content={articlePublished.toISOString()} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imgAbs} />
+
+    <link rel="preload" href={fuenteTitulos} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={fuenteCuerpo} as="font" type="font/woff2" crossorigin />
+    <meta name="theme-color" content="#FDF9F0" />
+    <link rel="icon" href={href('/favicon.svg').replace(/\/$/, '')} type="image/svg+xml" />
+    <link rel="alternate" type="text/plain" href={new URL('/llms.txt', Astro.site).toString()} title="llms.txt" />
+
+    <!-- Movimiento: se activa solo si el visitante no pide reducirlo. El contenido es visible por defecto. -->
+    <script is:inline>
+      document.documentElement.classList.replace('no-js', 'js');
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('js-motion');
+    </script>
+
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  </head>
+  <body>
+    <a class="saltar" href="#contenido">{t(locale, 'skip')}</a>
+    <Header locale={locale} tone={tone} current={current} />
+    <main id="contenido" tabindex="-1">
+      <slot />
+    </main>
+    <Footer locale={locale} />
+    <div class="cursor" aria-hidden="true" data-cursor-el><span></span></div>
+    <script>
+      import '../scripts/menu';
+      import '../scripts/motion';
+      import '../scripts/cursor';
+      import '../scripts/form';
+    </script>
+  </body>
+</html>
