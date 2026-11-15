@@ -2,7 +2,7 @@
 
 - [ ] Maquetas de proyectos: `src/assets/proyectos/<slug>/portada.jpg`
 - [ ] Fotos del equipo: `src/assets/equipo/tom.jpg`, `betsabe.jpg`
-- [ ] Logo oficial en SVG: recibido el monograma «bi» (en `src/assets/logo/`, usado como favicon). **Falta el wordmark «binōme» completo en SVG** (hoy es texto con Funnel Display) y confirmar los colores del logo (`#2C2C2C` / `#EFEBE2`) frente a los tokens de la web
+- [ ] Logo oficial en SVG: monograma «bi» recibido (`src/assets/logo/`, favicon). El wordmark «binōme» llegó solo como imagen PNG: el hero usa una **réplica trazada** (`LogoBinome.astro`). **Pasar el SVG original del wordmark** para sustituirla; después, usarlo también en cabecera y pie (hoy texto). Confirmar colores del logo (`#252525` / `#EFEBE2`) frente a los tokens
 - [ ] Teléfono a publicar (en Webflow el texto y el `tel:` difieren)
 - [ ] Textos legales de Webflow (aviso legal, privacidad, cookies)
 - [ ] Contenido de los 6 proyectos en borrador (reto, propuesta, resultados)

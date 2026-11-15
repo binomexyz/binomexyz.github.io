@@ -6,6 +6,7 @@ import Persona from '../components/Persona.astro';
 import ProyectoCard from '../components/ProyectoCard.astro';
 import ProyectoCover from '../components/ProyectoCover.astro';
 import Garabato from '../components/Garabato.astro';
+import LogoBinome from '../components/LogoBinome.astro';
 import '../styles/home.css';
 import { servicios } from '../data/servicios';
 import { site } from '../data/site';
@@ -34,15 +35,9 @@ const flotantes = proyectos.slice(0, 6);
   jsonLd={[faqPage(h.faqs)]}
 >
   <!-- ───────── Hero: wordmark gigante con la ō viva, piezas flotantes y garabatos ───────── -->
-  <section class="hero2" data-tone="light" data-escena-ref aria-labelledby="hero-titulo">
+  <section class="hero2" data-tone="light" aria-labelledby="hero-titulo">
     <div class="hero2__marca" aria-hidden="true">
-      <span>b</span><span>i</span><span>n</span><span class="hero2__o" data-escena data-alcance="5">
-        <svg class="hero2__o-fallback" viewBox="-1 -1 2 2" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true">
-          <path d="M0.540 0.341A0.6 0.6 0 0 0 0.013 -0.520" fill="none" stroke="var(--color-coral-500)" stroke-width="0.39" stroke-linecap="round" />
-          <path d="M-0.540 -0.181A0.6 0.6 0 0 0 -0.013 0.680" fill="none" stroke="var(--color-lavender-500)" stroke-width="0.39" stroke-linecap="round" />
-          <rect x="-0.205" y="-0.905" width="0.41" height="0.08" rx="0.04" fill="var(--color-ink-900)" />
-        </svg>
-      </span><span>m</span><span>e</span>
+      <LogoBinome class="hero2__logo" />
     </div>
 
     <ul class="hero2__flota" aria-label={h.destacados}>
@@ -188,6 +183,5 @@ const flotantes = proyectos.slice(0, 6);
   <Cta locale={locale} tone="light" />
 </Base>
 <script>
-  import '../scripts/hero-escena';
   import '../scripts/home-motion';
 </script>

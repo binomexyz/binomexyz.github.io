@@ -8,18 +8,10 @@
 }
 .hero2__marca {
   grid-row: 1; justify-self: center; position: relative; z-index: 2;
-  display: flex; align-items: baseline; justify-content: center;
-  font-family: var(--font-display); font-weight: 700; color: var(--text);
-  font-size: clamp(4.25rem, 20vw, 21rem); line-height: 0.9; letter-spacing: -0.045em;
-  white-space: nowrap; user-select: none; pointer-events: none;
+  width: clamp(17rem, 62vw, 58rem); color: #252525; /* color del logo oficial */
+  user-select: none; pointer-events: none;
 }
-/* La «ō» es la escena WebGL (o su SVG estático); ocupa el hueco de la letra. */
-.hero2__o { position: relative; display: inline-block; width: 0.74em; height: 0.74em; margin-inline: 0.04em; margin-bottom: -0.045em; /* baseline del flex = borde inferior del margen */ }
-.hero2__o svg, .hero2__o canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-.hero2__o canvas { opacity: 0; transition: opacity 0.9s ease; }
-.hero2__o-fallback { transition: opacity 0.9s ease; }
-.hero2__o.escena--viva canvas { opacity: 1; }
-.hero2__o.escena--viva .hero2__o-fallback { opacity: 0; }
+.hero2__logo { display: block; width: 100%; height: auto; }
 
 /* Piezas flotantes (proyectos): posición por % del hero; profundidad --d para el paralaje */
 .hero2__flota { list-style: none; margin: 0; padding: 0; position: absolute; inset: 0; z-index: 1; pointer-events: none; }
@@ -50,7 +42,7 @@
 .hero2__g--1 { width: 11vw; left: 19%; top: 60%; transform: rotate(-10deg); }
 .hero2__g--2 { width: 5vw; left: 60%; top: 17%; }
 .hero2__g--3 { width: 11vw; left: 72%; top: 66%; transform: rotate(8deg); }
-.hero2__g--4 { width: 8vw; left: 15%; top: 28%; transform: rotate(-70deg); }
+.hero2__g--4 { width: 8vw; left: 40%; top: 69%; transform: rotate(-25deg); }
 
 .hero2__pie {
   grid-row: 2; position: relative; z-index: 3;
@@ -62,14 +54,14 @@
 .hero2__acciones { display: flex; flex-wrap: wrap; gap: 0.75rem; }
 
 @media (max-width: 899px) {
-  .hero2__marca { font-size: clamp(4rem, 26vw, 11rem); }
+  .hero2__marca { width: 92vw; }
   .flota--1 { --x: 5%;  --y: 10%; --w: 26vw; }
   .flota--2 { --x: 69%; --y: 13%; --w: 26vw; }
-  .flota--3 { --x: 8%;  --y: 40%; --w: 23vw; }
-  .flota--4 { --x: 68%; --y: 38%; --w: 23vw; }
+  .flota--3 { --x: 8%;  --y: 44%; --w: 23vw; }
+  .flota--4 { --x: 68%; --y: 42%; --w: 23vw; }
   .flota--5, .flota--6 { display: none; }
   .hero2__g--1 { width: 22vw; left: 37%; top: 11%; }
-  .hero2__g--2 { width: 10vw; left: 44%; top: 43%; }
+  .hero2__g--2 { width: 10vw; left: 44%; top: 47%; }
   .hero2__g--3, .hero2__g--4 { display: none; }
   .hero2__acciones { width: 100%; }
 }
