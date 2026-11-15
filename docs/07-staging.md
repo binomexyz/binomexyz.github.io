@@ -23,8 +23,8 @@ Hasta el paso 3 el workflow termina en verde sin desplegar nada.
 ## Opción rápida para validar: GitHub Pages en otra cuenta (publica solo `dist/`)
 Mientras se valida (FR/EN, textos), basta un enlace abierto con `noindex`. El repo `binome-web` es privado y su plan no
 permite Pages, así que se compila aquí y se sube **solo el resultado** a un repo público de otra cuenta
-(hoy: `binomexyz/https-binome.github.io`). El código, `docs/` y los pendientes **no** se publican.
-URL resultante: `https://binomexyz.github.io/https-binome.github.io/` (o `https://binomexyz.github.io/` si el repo se llama `binomexyz.github.io`; entonces definir la variable `STAGING_BASE_PATH=/`).
+(hoy: `binomexyz/binome.github.io`). El código, `docs/` y los pendientes **no** se publican.
+URL resultante: `https://binomexyz.github.io/binome.github.io/` (o `https://binomexyz.github.io/` si el repo se llama `binomexyz.github.io`; entonces definir la variable `STAGING_BASE_PATH=/`).
 
 1. Generar una clave sin contraseña (en tu ordenador):
    `ssh-keygen -t ed25519 -f staging_key -N "" -C "binome-staging"`

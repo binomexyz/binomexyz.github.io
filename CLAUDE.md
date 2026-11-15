@@ -34,7 +34,7 @@ Redactadas por IA, **sin revisión nativa**. Mientras `estado.mjs` las marque `p
 ## CI y despliegue
 - `ci.yml`: check + build + axe en push a `main`/`master`, PRs y lanzamiento manual. Verde en GitHub sobre la rama de trabajo (workflow_dispatch).
 - `deploy-staging.yml`: Cloudflare Pages, `noindex` + `X-Robots-Tag`. **No despliega hasta que existan** los secretos `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID` (guía en `docs/07-staging.md`; falta crear el proyecto y la política de Access).
-- `deploy-staging-github.yml`: validación rápida y abierta con `noindex`: compila en el repo privado y sube solo `dist/` a un repo público de otra cuenta (`binomexyz/https-binome.github.io`, Pages desde `main`). Necesita el secret `STAGING_DEPLOY_KEY` (guía en `docs/07-staging.md`); sin él no despliega. GitHub Pages directo desde este repo no es posible: es privado y su plan no lo permite.
+- `deploy-staging-github.yml`: validación rápida y abierta con `noindex`: compila en el repo privado y sube solo `dist/` a un repo público de otra cuenta (`binomexyz/binome.github.io`, Pages desde `main`). Necesita el secret `STAGING_DEPLOY_KEY` (guía en `docs/07-staging.md`); sin él no despliega. GitHub Pages directo desde este repo no es posible: es privado y su plan no lo permite.
 - Producción (Cloudflare Pages o Netlify, 301, cabeceras): `docs/05-migracion-dominio.md`. Sin decidir.
 
 ## Estado actual (2026-11-15)
