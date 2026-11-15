@@ -1,0 +1,42 @@
+name: Deploy staging (GitHub Pages)
+# Staging abierto y noindex en https://binomexyz.github.io/ (repo público binomexyz/binomexyz.github.io).
+# Compila con FR/EN provisionales y noindex. NO toca binome.xyz (no hay dominio propio configurado).
+# Requiere: Settings → Pages → Source: «GitHub Actions», y que este workflow esté en la rama por defecto.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency: { group: pages, cancel-in-progress: true }
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version-file: .nvmrc, cache: npm }
+      - run: npm ci
+      - run: npm run build
+        env:
+          PUBLIC_NOINDEX: 'true'               # staging nunca se indexa
+          PUBLIC_PREVIEW_LOCALES: 'true'       # muestra FR/EN provisionales
+          SITE_URL: ${{ vars.STAGING_SITE_URL || 'https://binomexyz.github.io' }}
+          BASE_PATH: ${{ vars.STAGING_BASE_PATH || '/' }}
+          PUBLIC_FORMSPREE_ID: ${{ vars.PUBLIC_FORMSPREE_ID }}
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: dist }
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.d.outputs.page_url }}
+    steps:
+      - id: d
+        uses: actions/deploy-pages@v4

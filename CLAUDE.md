@@ -4,7 +4,7 @@ Web de Binōme (estudio digital boutique, Madrid) en **Astro estático**, recons
 Contexto: `README.md`, `PRODUCT.md` y `docs/` (01–07). Trabajar siempre **en español** con Tom.
 
 ## Reglas de trabajo
-1. **No publicar nada en `binome.xyz`** ni tocar su DNS, ni Webflow. Staging solo en `*.pages.dev` o en el repo público de staging de la otra cuenta (ver `docs/07-staging.md`); nunca con dominio propio.
+1. **No publicar nada en `binome.xyz`** ni tocar su DNS, ni Webflow. Staging solo en `binomexyz.github.io` o `*.pages.dev` (ver `docs/07-staging.md`); nunca con dominio propio.
 2. **Avisar antes de cada paso grande** (qué se va a hacer) y dar el resultado real: si algo falla o se omite, decirlo.
 3. **Nunca inventar contenido de cliente**: testimonios, cifras, textos legales, teléfonos, precios. Si falta, marcarlo `[VALIDAR]` / `PENDIENTE` y anotarlo en `docs/06-pendientes.md`.
 4. **Ramas y PRs**: desarrollar en la rama de sesión; no empujar a `master`; no abrir PR sin que se pida. Commits con mensaje en español.
@@ -34,7 +34,7 @@ Redactadas por IA, **sin revisión nativa**. Mientras `estado.mjs` las marque `p
 ## CI y despliegue
 - `ci.yml`: check + build + axe en push a `main`/`master`, PRs y lanzamiento manual. Verde en GitHub sobre la rama de trabajo (workflow_dispatch).
 - `deploy-staging.yml`: Cloudflare Pages, `noindex` + `X-Robots-Tag`. **No despliega hasta que existan** los secretos `CLOUDFLARE_API_TOKEN` y `CLOUDFLARE_ACCOUNT_ID` (guía en `docs/07-staging.md`; falta crear el proyecto y la política de Access).
-- `deploy-staging-github.yml`: validación rápida y abierta con `noindex`: compila en el repo privado y sube solo `dist/` a un repo público de otra cuenta (`binomexyz/binome.github.io`, Pages desde `main`). Necesita el secret `STAGING_DEPLOY_KEY` (guía en `docs/07-staging.md`); sin él no despliega. GitHub Pages directo desde este repo no es posible: es privado y su plan no lo permite.
+- `deploy-pages.yml`: staging abierto con `noindex` en GitHub Pages. El proyecto vive en el repo público `binomexyz/binomexyz.github.io` (Pages gratis, Source: GitHub Actions); compila con FR/EN provisionales y publica en `https://binomexyz.github.io/`. Solo despliega desde `main`. Al ser público, el repo expone código, `docs/` y este fichero.
 - Producción (Cloudflare Pages o Netlify, 301, cabeceras): `docs/05-migracion-dominio.md`. Sin decidir.
 
 ## Estado actual (2026-11-15)
