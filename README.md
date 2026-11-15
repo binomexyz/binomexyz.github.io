@@ -25,7 +25,9 @@ npm run dev        # http://localhost:4321
 - `design-system/` fuente única de tokens y pares de contraste. Guía viva en `/design-system/` (noindex).
 - `src/styles/` tokens (generado), base, layout, components.
 - `src/data/` NAP, servicios, textos de home. `src/content/` proyectos y artículos (Markdown, por idioma).
-- `src/i18n/` configuración y diccionario. ES completo; FR/EN estructurados, pendientes de traducción.
+- `src/i18n/` configuración, rutas por idioma (`config.ts`), cadenas de UI (`ui.ts`), contenido por idioma (`copy/`) y estado de cada traducción (`estado.mjs`).
+  ES original; FR/EN traducidos pero **provisionales** (pendientes de revisión nativa): solo se construyen con `PUBLIC_PREVIEW_LOCALES=true`.
+- `src/views/` plantillas de página parametrizadas por idioma; `src/pages/` las monta (ES en raíz, FR/EN en `[locale]/[...slug]`).
 - `src/pages/` rutas, incl. `llms.txt`, `llms-full.txt`, `robots.txt` dinámicos.
 - `docs/` auditoría, dirección creativa, SEO/GEO, accesibilidad, migración y pendientes.
 

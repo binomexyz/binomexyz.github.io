@@ -12,4 +12,6 @@
 - [ ] ID de Formspree y URL de reservas
 - [ ] Repo de GitHub y hosting de producción
 - [ ] Capturas móviles de otras páginas y patrón de URL de artículos en Webflow
-- [ ] Traducciones FR y EN
+- [ ] Revisión nativa de FR y EN (textos en `src/i18n/copy/fr.ts`, `en.ts`, `ui.ts` y `content/proyectos/fr|en`); al validar, cambiar a `'revisada'` en `src/i18n/estado.mjs`
+- [ ] Traducir artículos del archivo (hoy solo ES; FR/EN muestran aviso)
+- [ ] Textos legales y de cookies en FR/EN (hoy solo el aviso de pendiente)

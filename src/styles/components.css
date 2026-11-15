@@ -430,4 +430,5 @@
   position: relative; z-index: 40; padding: 0.6rem var(--space-gutter); text-align: center;
   background: var(--color-ink-900); color: var(--color-cream-50); font-size: var(--step--1); line-height: 1.4;
 }
+.aviso-traduccion p { margin: 0; }
 .envoltorio { position: relative; }

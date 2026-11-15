@@ -119,7 +119,7 @@ const Wrap = provisional ? 'div' : Fragment;
   </head>
   <body>
     <a class="saltar" href="#contenido">{t(locale, 'skip')}</a>
-    {provisional && <p class="aviso-traduccion" role="note">{t(locale, 'provisional')}</p>}
+    {provisional && <aside class="aviso-traduccion" aria-label={t(locale, 'idioma')}><p>{t(locale, 'provisional')}</p></aside>}
     <Wrap {...(provisional ? { class: 'envoltorio' } : {})}>
     <Header locale={locale} tone={tone} current={current} alternates={alt} />
     <main id="contenido" tabindex="-1">

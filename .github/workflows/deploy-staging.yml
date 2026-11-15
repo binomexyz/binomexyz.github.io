@@ -40,6 +40,7 @@ jobs:
         if: steps.cred.outputs.listo == 'true'
         env:
           PUBLIC_NOINDEX: 'true'                                  # staging nunca se indexa
+          PUBLIC_PREVIEW_LOCALES: 'true'                          # staging muestra FR/EN provisionales
           SITE_URL: ${{ vars.SITE_URL || 'https://binome-web-staging.pages.dev' }}
           BASE_PATH: /
           PUBLIC_FORMSPREE_ID: ${{ vars.PUBLIC_FORMSPREE_ID }}

@@ -14,6 +14,8 @@ jobs:
       - run: npm ci
       - run: npm run check          # tipos y contenido (astro check)
       - run: npm run build          # incluye tokens + validación de contraste
+        env:
+          PUBLIC_PREVIEW_LOCALES: 'true'   # construye y audita también FR/EN (traducciones provisionales)
       - name: Auditoría WCAG + SEO (axe-core)
         run: npm run test:a11y
         env:
