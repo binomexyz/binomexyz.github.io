@@ -1,33 +1,56 @@
-name: Deploy staging (GitHub Pages)
+name: Deploy staging (Cloudflare Pages)
+# Staging privado y noindex. NO toca binome.xyz: publica solo en <proyecto>.pages.dev.
+# Se activa cuando existen los secretos CLOUDFLARE_API_TOKEN y CLOUDFLARE_ACCOUNT_ID (ver docs/07-staging.md).
+# Mientras no existan, el job termina en verde sin desplegar.
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, master]
+
 permissions:
   contents: read
-  pages: write
-  id-token: write
-concurrency: { group: pages, cancel-in-progress: true }
+
+concurrency: { group: staging, cancel-in-progress: true }
+
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      PROJECT: ${{ vars.CF_PAGES_PROJECT || 'binome-web-staging' }}
     steps:
+      - name: Comprobar credenciales
+        id: cred
+        run: |
+          if [ -n "$CLOUDFLARE_API_TOKEN" ] && [ -n "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "listo=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::Sin secretos de Cloudflare: staging no desplegado (ver docs/07-staging.md)."
+            echo "listo=false" >> "$GITHUB_OUTPUT"
+          fi
       - uses: actions/checkout@v4
+        if: steps.cred.outputs.listo == 'true'
       - uses: actions/setup-node@v4
+        if: steps.cred.outputs.listo == 'true'
         with: { node-version-file: .nvmrc, cache: npm }
       - run: npm ci
+        if: steps.cred.outputs.listo == 'true'
       - run: npm run build
+        if: steps.cred.outputs.listo == 'true'
         env:
-          PUBLIC_NOINDEX: 'true'                       # staging nunca se indexa
-          SITE_URL: ${{ vars.SITE_URL }}               # p. ej. https://<usuario>.github.io
-          BASE_PATH: ${{ vars.BASE_PATH }}             # p. ej. /binome-web (vacío si hay subdominio propio)
+          PUBLIC_NOINDEX: 'true'                                  # staging nunca se indexa
+          SITE_URL: ${{ vars.SITE_URL || 'https://binome-web-staging.pages.dev' }}
+          BASE_PATH: /
           PUBLIC_FORMSPREE_ID: ${{ vars.PUBLIC_FORMSPREE_ID }}
-      - uses: actions/upload-pages-artifact@v3
-        with: { path: dist }
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment: { name: github-pages, url: "${{ steps.d.outputs.page_url }}" }
-    steps:
-      - id: d
-        uses: actions/deploy-pages@v4
+      - name: Cabecera noindex solo en staging
+        if: steps.cred.outputs.listo == 'true'
+        run: |
+          printf '\n/*\n  X-Robots-Tag: noindex, nofollow\n' >> dist/_headers
+      - name: Desplegar en Cloudflare Pages
+        if: steps.cred.outputs.listo == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=${{ env.PROJECT }} --branch=staging --commit-dirty=true

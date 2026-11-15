@@ -33,5 +33,5 @@ npm run dev        # http://localhost:4321
 `SITE_URL`, `BASE_PATH`, `PUBLIC_NOINDEX`, `PUBLIC_FORMSPREE_ID`, `PUBLIC_BOOKING_URL` (ver `.env.example`).
 
 ## Despliegue
-Staging en GitHub Pages (`noindex`). Producción recomendada en Cloudflare Pages o Netlify
+Staging privado en Cloudflare Pages con Access y `noindex` (ver `docs/07-staging.md`). Producción recomendada en Cloudflare Pages o Netlify
 (301 y cabeceras de seguridad; ver `public/_headers`, `public/_redirects` y `docs/05-migracion-dominio.md`).
