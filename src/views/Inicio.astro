@@ -31,6 +31,13 @@ const destacados = proyectos.filter((p) => p.data.destacado);
   jsonLd={[faqPage(h.faqs)]}
 >
   <section class="hero" data-tone="light" aria-labelledby="hero-titulo">
+    <div class="hero__escena" data-escena aria-hidden="true">
+      <svg class="hero__escena-fallback" viewBox="-1.6 -1 3.2 2" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true">
+        <path d="M0.558 0.350A0.62 0.62 0 0 0 0.013 -0.540" fill="none" stroke="var(--color-coral-500)" stroke-width="0.30" stroke-linecap="round" />
+        <path d="M-0.558 -0.190A0.62 0.62 0 0 0 -0.013 0.700" fill="none" stroke="var(--color-lavender-500)" stroke-width="0.30" stroke-linecap="round" />
+        <rect x="-0.205" y="-0.905" width="0.41" height="0.08" rx="0.04" fill="var(--color-ink-900)" />
+      </svg>
+    </div>
     <div class="contenedor hero__cuerpo">
       <h1 id="hero-titulo" class="hero__titulo entra-t" set:html={h.h1} />
       <p class="hero__lead entra entra--2">{h.lead}</p>
@@ -146,3 +153,6 @@ const destacados = proyectos.filter((p) => p.data.destacado);
 
   <Cta locale={locale} tone="light" />
 </Base>
+<script>
+  import '../scripts/hero-escena';
+</script>
