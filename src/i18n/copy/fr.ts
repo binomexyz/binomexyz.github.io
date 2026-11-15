@@ -48,6 +48,9 @@ export const fr: Copy = {
     procesoTitulo: 'Comment nous travaillons avec vous',
     porqueTitulo: 'Ce qui nous distingue',
     faqTitulo: 'Questions fréquentes',
+    marquee: 'Projets et clients',
+    palabraOscura: 'duo',
+    casosAria: 'Réalisations récentes',
     porQueNosotros: [
       { titulo: 'Un design stratégique, jamais improvisé', texto: 'Avant de concevoir, nous analysons votre projet, votre activité et votre public.' },
       { titulo: 'Un processus clair et accompagné', texto: 'Vous savez où nous en sommes à chaque instant, sans jargon opaque.' },

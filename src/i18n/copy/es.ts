@@ -66,6 +66,9 @@ export const es = {
     procesoTitulo: 'Así trabajamos contigo',
     porqueTitulo: 'Lo que nos hace diferentes',
     faqTitulo: 'Preguntas frecuentes',
+    marquee: 'Proyectos y clientes',
+    palabraOscura: 'dúo',
+    casosAria: 'Casos recientes',
     porQueNosotros: [
       { titulo: 'Diseño estratégico, no improvisado', texto: 'Antes de diseñar, analizamos tu proyecto, tu negocio y a quién te diriges.' },
       { titulo: 'Proceso claro y acompañado', texto: 'Sabes en qué punto estamos en cada momento, sin lenguaje opaco.' },

@@ -68,10 +68,10 @@ void main(){
   float g = exp(-dot(d, d) * 5.5) * uPtrAmt;
   q += w * 0.075 + d * g * 0.55;
 
-  float tk = 0.150 + 0.018 * sin(atan(q.y, q.x) * 3.0 + uTime * 0.6);
+  float tk = 0.195 + 0.018 * sin(atan(q.y, q.x) * 3.0 + uTime * 0.6);
   float L = uL;
-  float dA = brazo(q, uRot, L, 0.62, tk);
-  float dB = brazo(q, uRot + PI, L, 0.62, tk);
+  float dA = brazo(q, uRot, L, 0.60, tk);
+  float dB = brazo(q, uRot + PI, L, 0.60, tk);
   float dist = smin(dA, dB, 0.13);
 
   float mixw = clamp(0.5 + (dB - dA) / 0.30, 0.0, 1.0);
@@ -141,6 +141,8 @@ function iniciar(cont: HTMLElement) {
   ajustar();
   new ResizeObserver(ajustar).observe(cont);
 
+  const alcance = Number(cont.dataset.alcance ?? 1);                              // cuánto se extiende la influencia del puntero
+  const ref = (cont.closest('[data-escena-ref]') as HTMLElement | null) ?? cont;  // elemento cuyo scroll gobierna la unión
   // Puntero (suavizado) en coordenadas de escena; el efecto decae si está lejos de la ō.
   const objetivo = { x: 0, y: 0, amt: 0 };
   const actual = { x: 0, y: 0, amt: 0 };
@@ -150,7 +152,7 @@ function iniciar(cont: HTMLElement) {
     const y = -(e.clientY - r.top - r.height / 2) / (r.height / 2) + 0.08;
     objetivo.x = Math.max(-1.6, Math.min(1.6, x));
     objetivo.y = Math.max(-1.2, Math.min(1.2, y));
-    objetivo.amt = 1 - Math.min(1, Math.max(0, (Math.hypot(x, y) - 0.9) / 1.6));
+    objetivo.amt = 1 - Math.min(1, Math.max(0, (Math.hypot(x, y) / alcance - 0.9) / 1.6));
   }, { passive: true });
   document.documentElement.addEventListener('pointerleave', () => { objetivo.amt = 0; });
 
@@ -179,9 +181,9 @@ function iniciar(cont: HTMLElement) {
     }
     const t = (ahora - t0) / 1000;
     const intro = suave(Math.min(1, t / 1.4));
-    const r = cont.getBoundingClientRect();
-    // Progreso de scroll: 0 con el hero arriba → 1 cuando la escena sale por arriba.
-    const p = Math.min(1, Math.max(0, -r.top / (r.height * 1.1)));
+    const r = ref.getBoundingClientRect();
+    // Progreso de scroll: 0 con el hero arriba → 1 cuando sale por arriba.
+    const p = Math.min(1, Math.max(0, -r.top / (r.height * (ref === cont ? 1.1 : 0.8))));
     const L = (0.15 + (L0 - 0.15) * intro) + (L1 - L0) * suave(p);
     actual.x += (objetivo.x - actual.x) * 0.07;
     actual.y += (objetivo.y - actual.y) * 0.07;
@@ -201,3 +203,5 @@ function iniciar(cont: HTMLElement) {
   }
   loop();
 }
+
+export {};
