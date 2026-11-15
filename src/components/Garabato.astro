@@ -1,0 +1,14 @@
+---
+// Garabatos de trazo a mano (decorativos). Se «dibujan» con GSAP si el movimiento está permitido; si no, se ven completos.
+interface Props { variante?: 'lazo' | 'onda' | 'chispa' | 'flecha'; tono?: 'coral' | 'lavender' | 'ink'; class?: string }
+const { variante = 'lazo', tono = 'coral', class: clase = '' } = Astro.props;
+const trazos = {
+  lazo: 'M12 84C42 6 112 8 104 62C98 104 52 106 46 70C40 30 132 18 188 52',
+  onda: 'M8 70C28 18 52 18 62 62C72 104 96 104 108 56C118 14 144 18 156 62C164 90 178 86 192 50',
+  chispa: 'M100 8V112M42 30L158 90M42 90L158 30',
+  flecha: 'M12 96C58 98 120 74 158 26M158 26L128 30M158 26L162 56',
+} as const;
+---
+<svg class={`garabato garabato--${tono} ${clase}`} viewBox="0 0 200 120" fill="none" aria-hidden="true" focusable="false">
+  <path d={trazos[variante]} pathLength="1" />
+</svg>

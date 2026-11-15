@@ -1,0 +1,17 @@
+/* Layout: contenedor, ritmo vertical y utilidades de grid. Un solo ritmo de espaciado en toda la web. */
+.contenedor {
+  width: min(100% - 2 * var(--space-gutter), var(--layout-container));
+  margin-inline: auto;
+}
+.seccion { padding-block: var(--space-section); }
+.seccion--arriba { padding-top: calc(var(--space-section) * 1.35); } /* hueco para la cabecera */
+.seccion--compacta { padding-block: calc(var(--space-section) * 0.55); }
+.prosa { max-width: var(--layout-measure); }
+.centrado { text-align: center; margin-inline: auto; }
+
+/* Colores de categoría (tono por servicio/proyecto) */
+.tono-coral { --tono: var(--color-coral-500); --tono-tinta: var(--color-ink-900); }
+.tono-lavender { --tono: var(--color-lavender-500); --tono-tinta: var(--color-ink-900); }
+.tono-yellow { --tono: var(--color-yellow-500); --tono-tinta: var(--color-ink-900); }
+.tono-green { --tono: var(--color-green-500); --tono-tinta: var(--color-ink-900); }
+.tono-ink { --tono: var(--color-ink-800); --tono-tinta: var(--color-cream-50); }

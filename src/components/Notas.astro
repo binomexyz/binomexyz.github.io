@@ -1,0 +1,24 @@
+---
+import { categoriaPorSlug } from '../data/categorias';
+import { href } from '../i18n/config';
+import type { Articulo } from '../lib/proyectos';
+interface Props { articulos: Articulo[]; nivel?: 'h2' | 'h3' }
+const { articulos, nivel = 'h2' } = Astro.props;
+const H = nivel;
+const fmt = new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' });
+---
+{articulos.length === 0
+  ? <p class="centrado" style="color:var(--text-muted)">Pronto publicaremos aquí nuevos artículos.</p>
+  : <ul class="notas">
+      {articulos.map((a) => {
+        const c = categoriaPorSlug(a.data.categoria)!;
+        return (
+          <li class={`nota tono-${c.tono}`}>
+            <span class="nota__cat">{c.nombre}</span>
+            <H class="nota__titulo"><a href={href(`/archivo/${a.slug}/`)}>{a.data.titulo}</a></H>
+            <p class="nota__texto">{a.data.descripcion}</p>
+            <time datetime={a.data.fecha.toISOString().slice(0, 10)}>{fmt.format(a.data.fecha)}</time>
+          </li>
+        );
+      })}
+    </ul>}

@@ -1,0 +1,21 @@
+[
+  { "use": "Texto principal sobre superficie clara",          "fg": "semantic.light.text",           "bg": "semantic.light.surface",     "min": 7 },
+  { "use": "Texto principal sobre superficie clara alterna",  "fg": "semantic.light.text",           "bg": "semantic.light.surface-alt", "min": 7 },
+  { "use": "Texto atenuado sobre superficie clara",           "fg": "semantic.light.text-muted",     "bg": "semantic.light.surface",     "min": 4.5 },
+  { "use": "Texto atenuado sobre superficie clara alterna",   "fg": "semantic.light.text-muted",     "bg": "semantic.light.surface-alt", "min": 4.5 },
+  { "use": "Enlace/acento pequeño sobre claro",               "fg": "semantic.light.accent-text",    "bg": "semantic.light.surface",     "min": 4.5 },
+  { "use": "Acento en titulares grandes (≥24px) sobre claro", "fg": "semantic.light.accent-display", "bg": "semantic.light.surface",     "min": 3 },
+  { "use": "Texto sobre botón coral",                         "fg": "semantic.light.on-accent",      "bg": "semantic.light.accent",      "min": 4.5 },
+  { "use": "Anillo de foco sobre claro (no textual)",         "fg": "semantic.light.focus",          "bg": "semantic.light.surface",     "min": 3 },
+
+  { "use": "Texto principal sobre superficie oscura",         "fg": "semantic.dark.text",            "bg": "semantic.dark.surface",      "min": 7 },
+  { "use": "Texto principal sobre oscura alterna",            "fg": "semantic.dark.text",            "bg": "semantic.dark.surface-alt",  "min": 7 },
+  { "use": "Texto atenuado sobre superficie oscura",          "fg": "semantic.dark.text-muted",      "bg": "semantic.dark.surface",      "min": 4.5 },
+  { "use": "Texto atenuado sobre oscura alterna",             "fg": "semantic.dark.text-muted",      "bg": "semantic.dark.surface-alt",  "min": 4.5 },
+  { "use": "Acento (texto) sobre superficie oscura",          "fg": "semantic.dark.accent-text",     "bg": "semantic.dark.surface",      "min": 4.5 },
+  { "use": "Anillo de foco sobre oscuro (no textual)",        "fg": "semantic.dark.focus",           "bg": "semantic.dark.surface",      "min": 3 },
+
+  { "use": "Texto tinta sobre fondo amarillo (categoría)",    "fg": "color.ink.900",                 "bg": "color.yellow.500",           "min": 4.5 },
+  { "use": "Texto tinta sobre fondo verde (categoría)",       "fg": "color.ink.900",                 "bg": "color.green.500",            "min": 4.5 },
+  { "use": "Texto tinta sobre fondo lavanda (categoría)",     "fg": "color.ink.900",                 "bg": "color.lavender.500",         "min": 4.5 }
+]

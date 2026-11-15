@@ -1,0 +1,7 @@
+---
+// Wordmark tipográfico de respaldo. SUSTITUIR por el SVG oficial del logo (src/assets/logo.svg) cuando esté exportado.
+// El macron de la "ō" va en su propio span: es el gesto de marca (la "o" lleva un dos encima).
+interface Props { class?: string }
+const { class: clase = '' } = Astro.props;
+---
+<span class={`marca ${clase}`} aria-hidden="true"><span class="marca__l">b</span><span class="marca__l">i</span><span class="marca__l">n</span><span class="marca__l marca__l--macron">ō</span><span class="marca__l">m</span><span class="marca__l">e</span></span>

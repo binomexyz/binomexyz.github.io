@@ -1,0 +1,42 @@
+---
+import Icono from './Icono.astro';
+import Wordmark from './Wordmark.astro';
+import SelectorIdioma from './SelectorIdioma.astro';
+import { site } from '../data/site';
+import { t } from '../i18n/ui';
+import { getCopy } from '../i18n/copy';
+import { link, type Locale } from '../i18n/config';
+interface Props { locale?: Locale; alternates?: Partial<Record<Locale, string>> }
+const { locale = 'es', alternates = {} } = Astro.props;
+const nuevaPestana = t(locale, 'nuevaPestana');
+const nav = (['proyectos', 'servicios', 'nosotros', 'contacto'] as const).map((key) => ({ key, label: getCopy(locale).nav[key], href: link(key, locale) }));
+const year = new Date().getFullYear();
+---
+<footer class="pie" data-tone="dark">
+  <div class="contenedor pie__cuerpo">
+    <nav aria-label={t(locale, 'pie')} class="pie__nav">
+      <ul class="pie__principal">
+        {nav.map((i) => <li><a href={i.href}>{i.label}</a></li>)}
+      </ul>
+      <ul class="pie__redes">
+        <li><a href={site.social.instagram} rel="me noopener" target="_blank" aria-label={`Instagram (${nuevaPestana})`}><Icono nombre="instagram" tamano={24} /></a></li>
+        <li><a href={site.social.linkedin} rel="me noopener" target="_blank" aria-label={`LinkedIn (${nuevaPestana})`}><Icono nombre="linkedin" tamano={24} /></a></li>
+        <li><a href={link('archivo', locale)}>{t(locale, 'archivo')}</a></li>
+      </ul>
+    </nav>
+    <address class="pie__contacto">
+      <a href={`mailto:${site.email}`}>{site.email}</a>
+      <span>{getCopy(locale).tagline}</span>
+    </address>
+    <SelectorIdioma locale={locale} alternates={alternates} />
+    <ul class="pie__legal">
+      <li><a href={link('legal', locale)}>{t(locale, 'legal')}</a></li>
+      <li><a href={link('cookies', locale)}>{t(locale, 'cookies')}</a></li>
+      <li><small>© {year} {site.legalName}</small></li>
+    </ul>
+    <a class="pie__arriba" href="#contenido" aria-label={t(locale, 'volverArriba')} data-arriba><Icono nombre="flecha-arriba" tamano={22} /></a>
+  </div>
+  <div class="pie__marca" data-wordmark>
+    <Wordmark />
+  </div>
+</footer>

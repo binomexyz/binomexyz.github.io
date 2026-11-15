@@ -1,0 +1,20 @@
+---
+import { t } from '../i18n/ui';
+import { nombreIdioma, htmlLang, esProvisional, type Locale } from '../i18n/config';
+interface Props { locale: Locale; alternates?: Partial<Record<Locale, string>>; clase?: string }
+const { locale, alternates = {}, clase = 'selector-idioma' } = Astro.props;
+const items = (Object.entries(alternates) as [Locale, string][]);
+---
+{items.length > 1 && (
+  <nav class={clase} aria-label={t(locale, 'selectorIdioma')}>
+    <ul>
+      {items.map(([l, url]) => (
+        <li>
+          <a href={url} lang={htmlLang[l].slice(0, 2)} hreflang={htmlLang[l]} aria-current={l === locale ? 'true' : undefined}>
+            {nombreIdioma[l]}{esProvisional(l) && <span class="selector-idioma__marca"> ({t(l, 'provisionalMarca')})</span>}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}

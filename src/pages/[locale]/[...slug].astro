@@ -1,0 +1,47 @@
+---
+// Rutas FR y EN (ES vive en la raíz). Una sola plantilla de rutas: las URLs salen de la tabla `rutas` de i18n/config.ts.
+// Solo se generan los idiomas activos: FR/EN provisionales únicamente con PUBLIC_PREVIEW_LOCALES=true (staging, CI, dev).
+import Inicio from '../../views/Inicio.astro';
+import Proyectos from '../../views/Proyectos.astro';
+import Proyecto from '../../views/Proyecto.astro';
+import Servicios from '../../views/Servicios.astro';
+import ServicioDetalle from '../../views/ServicioDetalle.astro';
+import Nosotros from '../../views/Nosotros.astro';
+import Contacto from '../../views/Contacto.astro';
+import Archivo from '../../views/Archivo.astro';
+import Legal from '../../views/Legal.astro';
+import { servicios } from '../../data/servicios';
+import { getProyectos } from '../../lib/proyectos';
+import { defaultLocale, localesActivos, rutaDe, type Locale, type RutaKey } from '../../i18n/config';
+
+type Pagina = { key: RutaKey; locale: Locale; slug?: string };
+export async function getStaticPaths() {
+  const sinBarras = (r: string) => r.replace(/^\/|\/$/g, '');
+  const paths: { params: { locale: string; slug: string | undefined }; props: Pagina }[] = [];
+  const simples: RutaKey[] = ['inicio', 'proyectos', 'servicios', 'nosotros', 'contacto', 'archivo', 'legal', 'cookies'];
+  for (const locale of localesActivos.filter((l) => l !== defaultLocale)) {
+    for (const key of simples) {
+      const r = sinBarras(rutaDe(key, locale));
+      paths.push({ params: { locale, slug: r || undefined }, props: { key, locale } });
+    }
+    for (const s of servicios) {
+      paths.push({ params: { locale, slug: sinBarras(rutaDe('servicio', locale, s.slug)) }, props: { key: 'servicio', locale, slug: s.slug } });
+    }
+    for (const p of await getProyectos(locale)) {
+      paths.push({ params: { locale, slug: sinBarras(rutaDe('proyecto', locale, p.slug)) }, props: { key: 'proyecto', locale, slug: p.slug } });
+    }
+  }
+  return paths;
+}
+const { key, locale, slug } = Astro.props as Pagina;
+---
+{key === 'inicio' && <Inicio locale={locale} />}
+{key === 'proyectos' && <Proyectos locale={locale} />}
+{key === 'proyecto' && <Proyecto locale={locale} slug={slug!} />}
+{key === 'servicios' && <Servicios locale={locale} />}
+{key === 'servicio' && <ServicioDetalle locale={locale} slug={slug!} />}
+{key === 'nosotros' && <Nosotros locale={locale} />}
+{key === 'contacto' && <Contacto locale={locale} />}
+{key === 'archivo' && <Archivo locale={locale} />}
+{key === 'legal' && <Legal locale={locale} cual="legal" />}
+{key === 'cookies' && <Legal locale={locale} cual="cookies" />}

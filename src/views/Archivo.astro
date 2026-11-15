@@ -1,0 +1,44 @@
+---
+// Índice del archivo. ES: filtros por categoría + artículos. FR/EN: los artículos solo existen en español,
+// se listan marcados con lang="es" y un aviso (no se traducen artículos sin revisión editorial).
+import Base from '../layouts/Base.astro';
+import CabeceraPagina from '../components/CabeceraPagina.astro';
+import Cta from '../components/Cta.astro';
+import Notas from '../components/Notas.astro';
+import { categorias } from '../data/categorias';
+import { getArticulos } from '../lib/proyectos';
+import { getCopy } from '../i18n/copy';
+import { equivalentes, link, type Locale } from '../i18n/config';
+import { t } from '../i18n/ui';
+import { breadcrumbs } from '../lib/schema';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const a = getCopy(locale).archivo;
+const articulos = await getArticulos('es');
+const origin = Astro.site!.toString().replace(/\/$/, '');
+const abs = (path: string) => `${origin}${path}`;
+---
+<Base
+  locale={locale}
+  title={a.title}
+  description={a.description}
+  current="archivo"
+  alternates={equivalentes('archivo')}
+  jsonLd={[breadcrumbs([{ name: t(locale, 'inicio'), url: abs(link('inicio', locale)) }, { name: a.migas, url: abs(link('archivo', locale)) }])]}
+>
+  <CabeceraPagina locale={locale} titulo={a.h1} lead={a.lead} migas={[{ name: t(locale, 'inicio'), href: link('inicio', locale) }, { name: a.migas }]} />
+  <section class="seccion--compacta seccion" data-tone="light" aria-label={a.aria}>
+    <div class="contenedor">
+      {locale === 'es' ? (
+        <ul class="chips" style="justify-content:center;margin-bottom:3rem" aria-label={a.filtrar}>
+          <li><a class="chip" href={link('archivo', locale)} aria-current="page">{a.todo}</a></li>
+          {categorias.map((c) => <li><a class={`chip tono-${c.tono}`} href={`${link('archivo', locale)}categoria/${c.slug}/`}>{c.nombre}</a></li>)}
+        </ul>
+      ) : (
+        <p class="aviso-borrador" style="margin-bottom:3rem">{a.soloEs}</p>
+      )}
+      {locale === 'es' ? <Notas articulos={articulos} /> : <div lang="es"><Notas articulos={articulos} /></div>}
+    </div>
+  </section>
+  <Cta locale={locale} tone="light" />
+</Base>

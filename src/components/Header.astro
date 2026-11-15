@@ -1,0 +1,47 @@
+---
+import Icono from './Icono.astro';
+import SelectorIdioma from './SelectorIdioma.astro';
+import { site } from '../data/site';
+import { t } from '../i18n/ui';
+import { getCopy } from '../i18n/copy';
+import { link, type Locale } from '../i18n/config';
+interface Props { locale?: Locale; tone?: 'light' | 'dark'; current?: string; alternates?: Partial<Record<Locale, string>> }
+const { locale = 'es', tone = 'light', current = '', alternates = {} } = Astro.props;
+const nuevaPestana = t(locale, 'nuevaPestana');
+const nav = (['proyectos', 'servicios', 'nosotros', 'contacto'] as const).map((key) => ({ key, label: getCopy(locale).nav[key], href: link(key, locale) }));
+---
+<header class="cabecera" data-tone={tone}>
+  <a class="logo" href={link('inicio', locale)} aria-label={`${site.name} — ${t(locale, 'inicioAria')}`}>binōme</a>
+
+  <!-- Sin JavaScript: navegación visible en línea. Con JavaScript: botón + menú a pantalla completa. -->
+  <nav class="cabecera__nav" aria-label={t(locale, 'navPrincipal')}>
+    <ul>
+      {nav.map((i) => <li><a href={i.href} aria-current={current === i.key ? 'page' : undefined}>{i.label}</a></li>)}
+      <li><a href={link('archivo', locale)} aria-current={current === 'archivo' ? 'page' : undefined}>{t(locale, 'archivo')}</a></li>
+    </ul>
+  </nav>
+
+  <button class="menu-boton" type="button" aria-haspopup="dialog" aria-controls="menu" aria-expanded="false" data-menu-abrir>
+    <span class="menu-boton__punto" aria-hidden="true"></span>{t(locale, 'menu')}
+  </button>
+
+  <dialog class="menu" id="menu" aria-label={t(locale, 'menuTitulo')} data-tone="dark">
+    <div class="menu__barra">
+      <span class="logo" aria-hidden="true">binōme</span>
+      <button class="menu__cerrar" type="button" data-menu-cerrar aria-label={t(locale, 'cerrar')}><Icono nombre="cerrar" tamano={22} /></button>
+    </div>
+    <nav class="menu__nav" aria-label={t(locale, 'menuTitulo')}>
+      <ul>
+        {nav.map((i) => <li><a class="menu__enlace" href={i.href} aria-current={current === i.key ? 'page' : undefined}>{i.label}</a></li>)}
+      </ul>
+    </nav>
+    <div class="menu__pie">
+      <ul class="menu__redes">
+        <li><a href={site.social.instagram} rel="me noopener" target="_blank">instagram<span class="sr-only"> ({nuevaPestana})</span></a></li>
+        <li><a href={site.social.linkedin} rel="me noopener" target="_blank">linkedin<span class="sr-only"> ({nuevaPestana})</span></a></li>
+      </ul>
+      <a class="menu__secundario" href={link('archivo', locale)}>{t(locale, 'archivo')}</a>
+      <SelectorIdioma locale={locale} alternates={alternates} />
+    </div>
+  </dialog>
+</header>

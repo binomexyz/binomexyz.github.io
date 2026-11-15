@@ -1,0 +1,20 @@
+---
+import { Image } from 'astro:assets';
+import { t } from '../i18n/ui';
+import type { Locale } from '../i18n/config';
+interface Props { locale?: Locale; id: string; nombre: string; alias: string; rol: string; bio: string }
+const { locale = 'es', id, nombre, alias, rol, bio } = Astro.props;
+const fotos = import.meta.glob<ImageMetadata>('/src/assets/equipo/*.{jpg,jpeg,png,webp,avif}', { eager: true, import: 'default' });
+const foto = Object.entries(fotos).find(([p]) => p.split('/').pop()!.startsWith(id))?.[1];
+const iniciales = alias.slice(0, 1);
+---
+<article class="persona" id={id}>
+  <div class="persona__foto">
+    {foto
+      ? <Image src={foto} alt={`${t(locale, 'retrato')} ${nombre}`} widths={[400, 700, 1000]} sizes="(min-width: 800px) 45vw, 100vw" loading="lazy" />
+      : <span class="persona__iniciales" aria-hidden="true">{iniciales}</span>}
+  </div>
+  <h3 class="persona__nombre">{alias}</h3>
+  <p class="persona__rol">{rol}</p>
+  <p class="persona__bio">{bio}</p>
+</article>

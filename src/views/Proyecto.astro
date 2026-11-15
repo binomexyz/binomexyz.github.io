@@ -1,0 +1,97 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ProyectoCover from '../components/ProyectoCover.astro';
+import Cta from '../components/Cta.astro';
+import { getProyectos } from '../lib/proyectos';
+import { getCopy } from '../i18n/copy';
+import { equivalentes, link, type Locale } from '../i18n/config';
+import { t } from '../i18n/ui';
+import { breadcrumbs, creativeWork } from '../lib/schema';
+
+interface Props { locale: Locale; slug: string }
+const { locale, slug } = Astro.props;
+const c = getCopy(locale);
+const L = c.proyecto;
+const todos = await getProyectos(locale);
+const p = todos.find((x) => x.slug === slug)!;
+const d = p.data;
+const origin = Astro.site!.toString().replace(/\/$/, '');
+const abs = (path: string) => `${origin}${path}`;
+const otros = todos.filter((x) => x.slug !== p.slug);
+const metaDesc = d.resumen.length > 155 ? d.resumen.slice(0, 152).replace(/\s+\S*$/, '') + '…' : d.resumen;
+const nuevaPestana = t(locale, 'nuevaPestana');
+---
+<Base
+  locale={locale}
+  title={`${d.nombre} | ${d.categorias.join(', ')} — Binōme`}
+  description={metaDesc}
+  current="proyectos"
+  noindex={d.borrador}
+  type="article"
+  alternates={equivalentes('proyecto', p.slug)}
+  jsonLd={[
+    creativeWork(origin, locale, { slug: p.slug, nombre: d.nombre, resumen: d.resumen, cliente: d.cliente, web: d.web, categorias: d.categorias }),
+    breadcrumbs([
+      { name: t(locale, 'inicio'), url: abs(link('inicio', locale)) },
+      { name: c.proyectos.migas, url: abs(link('proyectos', locale)) },
+      { name: d.nombre, url: abs(link('proyecto', locale, p.slug)) },
+    ]),
+  ]}
+>
+  <section class="seccion seccion--arriba" data-tone="light">
+    <div class="contenedor ficha__cabecera">
+      <div>
+        <Breadcrumbs locale={locale} items={[{ name: t(locale, 'inicio'), href: link('inicio', locale) }, { name: c.proyectos.migas, href: link('proyectos', locale) }, { name: d.nombre }]} />
+        <h1 class="ficha__titulo entra-t">{d.nombre}</h1>
+        <p class="ficha__resumen entra entra--2">{d.resumen}</p>
+        <ul class="ficha__etiquetas">{d.categorias.map((cat) => <li class="etiqueta">{cat}</li>)}</ul>
+        {d.ubicacion && <p style="margin-top:1.25rem;color:var(--text-muted)">{d.ubicacion}</p>}
+      </div>
+      <ProyectoCover locale={locale} slug={p.slug} nombre={d.nombre} tono={d.tono} sizes="(min-width: 900px) 55vw, 100vw" eager />
+    </div>
+
+    {(d.contexto || d.reto || d.propuesta || d.cliente) && (
+      <div class="contenedor ficha__cuerpo">
+        <dl class="datos">
+          {d.cliente && <div><dt>{L.cliente}</dt><dd>{d.cliente}</dd></div>}
+          {d.sector && <div><dt>{L.sector}</dt><dd><ul>{d.sector.map((s) => <li>{s}</li>)}</ul></dd></div>}
+          {d.entregables && <div><dt>{L.entregables}</dt><dd><ul>{d.entregables.map((s) => <li>{s}</li>)}</ul></dd></div>}
+          {d.web && <div><dt>{L.web}</dt><dd><a href={d.web} rel="noopener" target="_blank">{d.web.replace(/^https?:\/\/(www\.)?/, '')}<span class="sr-only"> ({nuevaPestana})</span></a></dd></div>}
+        </dl>
+        <div class="relato">
+          {d.contexto && <div class="relato__contexto"><h2>{L.contexto}</h2>{d.contexto.map((x) => <p>{x}</p>)}</div>}
+          {d.reto && <div><h2>{L.reto}</h2><p>{d.reto}</p></div>}
+          {d.propuesta && <div><h2>{L.propuesta}</h2><p>{d.propuesta}</p></div>}
+          {d.resultado && <div class="relato__contexto"><h2>{L.resultados}</h2><p>{d.resultado}</p></div>}
+        </div>
+      </div>
+    )}
+    {d.borrador && (
+      <div class="contenedor">
+        <p class="aviso-borrador">{import.meta.env.DEV ? L.borradorDev(p.slug) : L.enPreparacion}</p>
+      </div>
+    )}
+  </section>
+
+  {d.testimonio && (
+    <section class="seccion" data-tone="dark" aria-label={L.testimonio}>
+      <div class="contenedor">
+        <figure class="testimonio" style="margin:0">
+          <blockquote><p>{d.testimonio.texto}</p></blockquote>
+          <figcaption>{d.testimonio.autor}{d.testimonio.cargo ? `, ${d.testimonio.cargo}` : ''}{d.cliente ? ` — ${d.cliente}` : ''}</figcaption>
+        </figure>
+      </div>
+    </section>
+  )}
+
+  <section class="seccion--compacta seccion" data-tone="light" aria-labelledby="otros-titulo">
+    <div class="contenedor">
+      <div class="cabecera-seccion"><h2 id="otros-titulo" style="font-size:var(--step-2)">{L.otros}</h2></div>
+      <ul class="chips">
+        {otros.map((o) => <li><a class={`chip tono-${o.data.tono}`} href={link('proyecto', locale, o.slug)}>{o.data.nombre}</a></li>)}
+      </ul>
+    </div>
+  </section>
+  <Cta locale={locale} tone="light" />
+</Base>

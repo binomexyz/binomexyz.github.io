@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import CabeceraPagina from '../components/CabeceraPagina.astro';
+import { nav } from '../data/site';
+import { href } from '../i18n/config';
+---
+<Base title="Página no encontrada | Binōme" description="La página que buscas no existe o ha cambiado de lugar." noindex>
+  <CabeceraPagina titulo={'Esta página <em class="acento">no existe.</em>'} lead="Puede que el enlace haya cambiado. Estos son los sitios desde los que puedes seguir:" />
+  <section class="seccion--compacta seccion" data-tone="light">
+    <div class="contenedor">
+      <ul class="chips" style="justify-content:center">
+        <li><a class="chip" href={href('/')}>Inicio</a></li>
+        {nav.map((i) => <li><a class="chip" href={href(i.href)}>{i.label}</a></li>)}
+        <li><a class="chip" href={href('/archivo/')}>archivo</a></li>
+      </ul>
+    </div>
+  </section>
+</Base>

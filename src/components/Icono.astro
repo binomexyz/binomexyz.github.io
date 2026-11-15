@@ -1,0 +1,13 @@
+---
+// Iconos dibujados a mano en una única familia: trazo 1.75, esquinas redondeadas, caja 24×24.
+interface Props { nombre: 'instagram' | 'linkedin' | 'flecha' | 'flecha-arriba' | 'cerrar' | 'mas'; tamano?: number }
+const { nombre, tamano = 20 } = Astro.props;
+---
+<svg class="icono" width={tamano} height={tamano} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  {nombre === 'instagram' && (<><rect x="3.5" y="3.5" width="17" height="17" rx="5" /><circle cx="12" cy="12" r="3.9" /><circle cx="17.2" cy="6.8" r="0.6" fill="currentColor" stroke="none" /></>)}
+  {nombre === 'linkedin' && (<><rect x="3.5" y="3.5" width="17" height="17" rx="3" /><path d="M8 10.5v6M8 7.6v.1M11.5 16.5v-6m0 3c0-1.7 1.1-2.8 2.5-2.8s2.2 1 2.2 2.6v3.2" /></>)}
+  {nombre === 'flecha' && <path d="M5 12h14m-5-5 5 5-5 5" />}
+  {nombre === 'flecha-arriba' && <path d="M12 19V5m-5 5 5-5 5 5" />}
+  {nombre === 'cerrar' && <path d="M6 6l12 12M18 6 6 18" />}
+  {nombre === 'mas' && <path d="M12 5v14M5 12h14" />}
+</svg>

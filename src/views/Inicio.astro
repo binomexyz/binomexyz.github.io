@@ -1,0 +1,193 @@
+---
+import Base from '../layouts/Base.astro';
+import Cta from '../components/Cta.astro';
+import Icono from '../components/Icono.astro';
+import Persona from '../components/Persona.astro';
+import ProyectoCard from '../components/ProyectoCard.astro';
+import ProyectoCover from '../components/ProyectoCover.astro';
+import Garabato from '../components/Garabato.astro';
+import '../styles/home.css';
+import { servicios } from '../data/servicios';
+import { site } from '../data/site';
+import { getCopy } from '../i18n/copy';
+import { getProyectos } from '../lib/proyectos';
+import { faqPage } from '../lib/schema';
+import { equivalentes, link, type Locale } from '../i18n/config';
+import { t } from '../i18n/ui';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const c = getCopy(locale);
+const h = c.home;
+const proyectos = await getProyectos(locale);
+const destacados = proyectos.filter((p) => p.data.destacado);
+const flotantes = proyectos.slice(0, 6);
+---
+
+<Base
+  locale={locale}
+  title={h.title}
+  description={h.description}
+  tone="light"
+  current="inicio"
+  alternates={equivalentes('inicio')}
+  jsonLd={[faqPage(h.faqs)]}
+>
+  <!-- ───────── Hero: wordmark gigante con la ō viva, piezas flotantes y garabatos ───────── -->
+  <section class="hero2" data-tone="light" data-escena-ref aria-labelledby="hero-titulo">
+    <div class="hero2__marca" aria-hidden="true">
+      <span>b</span><span>i</span><span>n</span><span class="hero2__o" data-escena data-alcance="5">
+        <svg class="hero2__o-fallback" viewBox="-1 -1 2 2" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true">
+          <path d="M0.540 0.341A0.6 0.6 0 0 0 0.013 -0.520" fill="none" stroke="var(--color-coral-500)" stroke-width="0.39" stroke-linecap="round" />
+          <path d="M-0.540 -0.181A0.6 0.6 0 0 0 -0.013 0.680" fill="none" stroke="var(--color-lavender-500)" stroke-width="0.39" stroke-linecap="round" />
+          <rect x="-0.205" y="-0.905" width="0.41" height="0.08" rx="0.04" fill="var(--color-ink-900)" />
+        </svg>
+      </span><span>m</span><span>e</span>
+    </div>
+
+    <ul class="hero2__flota" aria-label={h.destacados}>
+      {flotantes.map((p, i) => (
+        <li class={`flota flota--${i + 1}`} data-flota>
+          <a href={link('proyecto', locale, p.slug)} aria-label={p.data.nombre} data-cursor={t(locale, 'verCaso')}>
+            <ProyectoCover locale={locale} slug={p.slug} nombre={p.data.nombre} tono={p.data.tono} sizes="16vw" eager={i < 3} />
+          </a>
+        </li>
+      ))}
+    </ul>
+    <Garabato variante="lazo" tono="coral" class="hero2__g hero2__g--1" />
+    <Garabato variante="chispa" tono="lavender" class="hero2__g hero2__g--2" />
+    <Garabato variante="onda" tono="ink" class="hero2__g hero2__g--3" />
+    <Garabato variante="flecha" tono="coral" class="hero2__g hero2__g--4" />
+
+    <div class="contenedor hero2__pie">
+      <div class="hero2__texto">
+        <h1 id="hero-titulo" class="hero2__titulo entra-t" set:html={h.h1} />
+        <p class="hero2__lead entra entra--2">{h.lead}</p>
+      </div>
+      <div class="hero2__acciones entra entra--3">
+        <a class="boton boton--coral" href={link('contacto', locale)}>{t(locale, 'empiezaProyecto')}</a>
+        <a class="boton boton--contorno" href={link('proyectos', locale)}>{t(locale, 'verProyectos')}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────── Marquesina de proyectos y clientes ───────── -->
+  <section class="marquesina" data-tone="light" aria-label={h.marquee}>
+    <div class="marquesina__pista">
+      <ul class="marquesina__lista">
+        {proyectos.map((p) => <li>{p.data.nombre}</li>)}
+      </ul>
+      <ul class="marquesina__lista" aria-hidden="true">
+        {proyectos.map((p) => <li>{p.data.nombre}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ───────── Servicios ───────── -->
+  <section class="seccion" data-tone="light" aria-labelledby="servicios-titulo">
+    <div class="contenedor">
+      <div class="cabecera-seccion">
+        <h2 id="servicios-titulo" class="titular-gigante" data-reveal>{h.serviciosTitulo}</h2>
+        <a class="boton boton--contorno" href={link('servicios', locale)} data-reveal>{h.nuestrosServicios} <Icono nombre="flecha" /></a>
+      </div>
+      <ul class="servicios__lista">
+        {servicios.map((s) => {
+          const it = c.servicios.items[s.slug];
+          return (
+            <li class={`servicio tono-${s.tono}`} data-reveal>
+              <h3 class="servicio__nombre"><a href={link('servicio', locale, s.slug)}>{it.nombre}</a></h3>
+              <div>
+                <p class="servicio__texto">{it.resumen}</p>
+                <ul class="servicio__etiquetas">{it.incluye.slice(0, 3).map((i) => <li>{i}</li>)}</ul>
+              </div>
+              <span class="servicio__ir" aria-hidden="true"><Icono nombre="flecha" tamano={22} /></span>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ───────── Casos: tarjetas grandes, escalonadas, que se enderezan al entrar ───────── -->
+  <section class="seccion seccion--alt casos2-sec" data-tone="light" aria-labelledby="casos-titulo">
+    <div class="contenedor">
+      <div class="cabecera-seccion">
+        <h2 id="casos-titulo" class="titular-gigante" data-reveal>{h.casosTitulo}</h2>
+        <a class="boton boton--contorno" href={link('proyectos', locale)} data-reveal>{h.todosProyectos} <Icono nombre="flecha" /></a>
+      </div>
+      <ul class="casos2" aria-label={h.casosAria}>
+        {destacados.map((p) => (
+          <li class="casos2__item" data-caso>
+            <ProyectoCard locale={locale} slug={p.slug} nombre={p.data.nombre} categorias={p.data.categorias} tono={p.data.tono} />
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ───────── Bloque oscuro: enunciado + proceso ───────── -->
+  <div class="oscuro" data-tone="dark">
+    <span class="oscuro__palabra" aria-hidden="true" data-oscuro-palabra>{h.palabraOscura}</span>
+    <section class="seccion enunciado" data-tone="dark" aria-labelledby="enunciado">
+      <div class="contenedor">
+        <h2 id="enunciado" class="enunciado__texto" data-enunciado>{h.enunciado}</h2>
+        <p class="enunciado__apoyo" data-reveal>{h.enunciadoApoyo}</p>
+      </div>
+    </section>
+
+    <section class="seccion" data-tone="dark" aria-labelledby="proceso-titulo">
+      <div class="contenedor">
+        <div class="cabecera-seccion">
+          <h2 id="proceso-titulo" data-reveal>{h.procesoTitulo}</h2>
+        </div>
+        <ol class="proceso">
+          {h.proceso.map((p) => <li data-reveal><h3>{p.titulo}</h3><p>{p.texto}</p></li>)}
+        </ol>
+      </div>
+    </section>
+  </div>
+
+  <section class="seccion" data-tone="light" aria-labelledby="nosotros-titulo">
+    <div class="contenedor">
+      <div class="cabecera-seccion">
+        <h2 id="nosotros-titulo" data-reveal>{h.nosotrosTitulo}</h2>
+        <p data-reveal>{h.nosotrosTexto}</p>
+      </div>
+      <div class="equipo">
+        {site.founders.map((f) => <Persona locale={locale} id={f.id} nombre={f.name} alias={f.alias} rol={c.fundadores[f.id].role} bio={c.fundadores[f.id].bio} />)}
+      </div>
+      <p style="margin-top:2.5rem"><a class="boton boton--contorno" href={link('nosotros', locale)}>{h.conocenos} <Icono nombre="flecha" /></a></p>
+    </div>
+  </section>
+
+  <section class="seccion" data-tone="light" aria-labelledby="porque-titulo">
+    <div class="contenedor">
+      <div class="cabecera-seccion">
+        <h2 id="porque-titulo" data-reveal>{h.porqueTitulo}</h2>
+      </div>
+      <ul class="porque">
+        {h.porQueNosotros.map((p) => <li data-reveal><h3>{p.titulo}</h3><p>{p.texto}</p></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="seccion seccion--alt" data-tone="light" aria-labelledby="faq-titulo">
+    <div class="contenedor">
+      <div class="cabecera-seccion"><h2 id="faq-titulo" data-reveal>{h.faqTitulo}</h2></div>
+      <div class="faq">
+        {h.faqs.map((f) => (
+          <details>
+            <summary>{f.q}<Icono nombre="mas" tamano={24} /></summary>
+            <p class="faq__respuesta">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Cta locale={locale} tone="light" />
+</Base>
+<script>
+  import '../scripts/hero-escena';
+  import '../scripts/home-motion';
+</script>

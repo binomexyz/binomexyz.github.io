@@ -1,0 +1,11 @@
+---
+import Proyecto from '../../views/Proyecto.astro';
+import { getProyectos } from '../../lib/proyectos';
+
+export async function getStaticPaths() {
+  const proyectos = await getProyectos('es');
+  return proyectos.map((p) => ({ params: { slug: p.slug } }));
+}
+const { slug } = Astro.params;
+---
+<Proyecto locale="es" slug={slug!} />

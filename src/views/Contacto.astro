@@ -1,0 +1,76 @@
+---
+import Base from '../layouts/Base.astro';
+import CabeceraPagina from '../components/CabeceraPagina.astro';
+import { site } from '../data/site';
+import { getCopy } from '../i18n/copy';
+import { equivalentes, link, type Locale } from '../i18n/config';
+import { t } from '../i18n/ui';
+import { breadcrumbs } from '../lib/schema';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const c = getCopy(locale);
+const k = c.contacto;
+const origin = Astro.site!.toString().replace(/\/$/, '');
+const abs = (path: string) => `${origin}${path}`;
+const formId = import.meta.env.PUBLIC_FORMSPREE_ID;
+const action = formId ? `https://formspree.io/f/${formId}` : `mailto:${site.email}`;
+const reunion = import.meta.env.PUBLIC_BOOKING_URL || `mailto:${site.email}?subject=${encodeURIComponent(k.asuntoReunion)}`;
+const nuevaPestana = t(locale, 'nuevaPestana');
+---
+<Base
+  locale={locale}
+  title={k.title}
+  description={k.description}
+  tone="dark"
+  current="contacto"
+  alternates={equivalentes('contacto')}
+  jsonLd={[
+    { '@type': 'ContactPage', '@id': `${abs(link('contacto', locale))}#page`, url: abs(link('contacto', locale)), name: c.contactoNombre, about: { '@id': `${origin}/#organization` } },
+    breadcrumbs([{ name: t(locale, 'inicio'), url: abs(link('inicio', locale)) }, { name: k.h1, url: abs(link('contacto', locale)) }]),
+  ]}
+>
+  <CabeceraPagina locale={locale} tone="dark" titulo={k.h1} lead={k.lead} migas={[{ name: t(locale, 'inicio'), href: link('inicio', locale) }, { name: k.h1 }]} />
+  <section class="seccion--compacta seccion" data-tone="dark" aria-label={k.aria}>
+    <div class="contenedor">
+      <div class="filas">
+        <div class="fila"><p class="fila__etiqueta">{k.escribenos}</p><p class="fila__valor"><a href={`mailto:${site.email}`}>{site.email}</a>{site.phone && <> <span aria-hidden="true">/</span> <a href={`tel:${site.phone.replace(/\s/g, '')}`}>{site.phone}</a></>}</p></div>
+        <div class="fila"><p class="fila__etiqueta">{k.redes}</p><p class="fila__valor"><a href={site.social.linkedin} rel="me noopener" target="_blank">LinkedIn<span class="sr-only"> ({nuevaPestana})</span></a> <span aria-hidden="true">/</span> <a href={site.social.instagram} rel="me noopener" target="_blank">Instagram<span class="sr-only"> ({nuevaPestana})</span></a></p></div>
+        <div class="fila"><p class="fila__etiqueta">{k.reunete}</p><p class="fila__valor"><a href={reunion} {...(reunion.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}>{k.agenda}</a></p></div>
+      </div>
+    </div>
+  </section>
+  <section class="seccion" data-tone="dark" aria-labelledby="form-titulo">
+    <div class="contenedor">
+      <h2 id="form-titulo" style="font-size:var(--step-3);margin-bottom:2rem">{k.formTitulo}</h2>
+      <form class="formulario" method="post" action={action} data-formulario novalidate
+        data-enviando={t(locale, 'enviando')} data-ok={t(locale, 'gracias')} data-error={t(locale, 'errorEnvio')}>
+        <input type="hidden" name="_subject" value={k.asuntoForm} />
+        <div class="trampa" aria-hidden="true"><label>{k.noRellenar}<input type="text" name="_gotcha" tabindex="-1" autocomplete="off" /></label></div>
+        <div class="campo">
+          <label class="campo__etiqueta" for="f-nombre">{k.nombre}</label>
+          <input id="f-nombre" name="nombre" type="text" autocomplete="name" required aria-describedby="f-nombre-error" data-error-vacio={k.errorNombre} />
+          <p class="campo__error" id="f-nombre-error"></p>
+        </div>
+        <div class="campo">
+          <label class="campo__etiqueta" for="f-email">{k.email}</label>
+          <input id="f-email" name="email" type="email" autocomplete="email" inputmode="email" required aria-describedby="f-email-ayuda f-email-error" data-error-vacio={k.errorEmail} data-error-formato={k.errorEmailFormato} />
+          <p class="campo__ayuda" id="f-email-ayuda">{k.ayudaEmail}</p>
+          <p class="campo__error" id="f-email-error"></p>
+        </div>
+        <div class="campo">
+          <label class="campo__etiqueta" for="f-telefono">{k.telefono} <span class="campo__ayuda">{k.opcional}</span></label>
+          <input id="f-telefono" name="telefono" type="tel" autocomplete="tel" inputmode="tel" aria-describedby="f-telefono-error" />
+          <p class="campo__error" id="f-telefono-error"></p>
+        </div>
+        <div class="campo">
+          <label class="campo__etiqueta" for="f-mensaje">{k.mensaje}</label>
+          <textarea id="f-mensaje" name="mensaje" required aria-describedby="f-mensaje-error" data-error-vacio={k.errorMensaje}></textarea>
+          <p class="campo__error" id="f-mensaje-error"></p>
+        </div>
+        <p class="legal-nota">{k.legalPre}<a href={link('legal', locale)}>{k.legalEnlace}</a>{k.legalPost}</p>
+        <div><button class="boton boton--coral" type="submit">{t(locale, 'enviar')}</button></div>
+        <p class="estado" role="status" aria-live="polite" data-estado></p>
+      </form>
+    </div>
+  </section>
+</Base>

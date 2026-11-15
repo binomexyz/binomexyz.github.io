@@ -1,0 +1,88 @@
+---
+// Guía viva del design system: se alimenta de design-system/tokens.json y calcula los contrastes en cada build.
+import Base from '../layouts/Base.astro';
+import Icono from '../components/Icono.astro';
+// @ts-ignore módulo .mjs compartido con los scripts de Node
+import { readTokens, flatten, resolveValue, evaluatePairs } from '../../scripts/lib/tokens.mjs';
+
+const tree = readTokens();
+const colores = flatten({ color: tree.color }).map((t: any) => ({ nombre: t.path.slice(1).join('-'), hex: resolveValue(tree, t.value) }));
+const pares = evaluatePairs();
+const muestra = [['5', 'Display'], ['4', 'Título de sección'], ['3', 'Subtítulo'], ['2', 'Título de tarjeta'], ['1', 'Lead'], ['0', 'Cuerpo'], ['-1', 'Apoyo / etiqueta']];
+---
+<Base title="Design system | Binōme" description="Guía viva del design system de Binōme." noindex>
+  <section class="seccion seccion--arriba" data-tone="light">
+    <div class="contenedor">
+      <h1 style="max-width:14ch">Design <em class="acento">system</em></h1>
+      <p class="hero__lead" style="margin-top:1.5rem">Todo sale de <code>design-system/tokens.json</code>. Los contrastes se verifican en cada build.</p>
+    </div>
+  </section>
+
+  <section class="seccion--compacta seccion" data-tone="light" aria-labelledby="ds-color">
+    <div class="contenedor">
+      <h2 id="ds-color" style="font-size:var(--step-3);margin-bottom:2rem">Color</h2>
+      <ul class="chips" style="gap:.75rem">
+        {colores.map((c: any) => (
+          <li style="display:grid;gap:.4rem;width:8rem">
+            <span style={`height:4.5rem;border-radius:var(--radius-sm);background:${c.hex};border:1px solid var(--line)`}></span>
+            <span style="font-size:var(--step--1);font-weight:500">{c.nombre}</span>
+            <span style="font-size:var(--step--1);color:var(--text-muted)">{c.hex}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="seccion--compacta seccion seccion--alt" data-tone="light" aria-labelledby="ds-contraste">
+    <div class="contenedor">
+      <h2 id="ds-contraste" style="font-size:var(--step-3);margin-bottom:1.5rem">Contraste verificado (WCAG 2.2)</h2>
+      <div style="overflow-x:auto" tabindex="0" role="region" aria-label="Tabla de contrastes, desplazable">
+        <table style="border-collapse:collapse;width:100%;min-width:40rem">
+          <thead><tr><th scope="col" style="text-align:left;padding:.5rem 0">Uso</th><th scope="col" style="text-align:left">Muestra</th><th scope="col" style="text-align:right">Ratio</th><th scope="col" style="text-align:right">Mínimo</th><th scope="col" style="text-align:right">Estado</th></tr></thead>
+          <tbody>
+            {pares.map((p: any) => (
+              <tr style="border-top:1px solid var(--line)">
+                <td style="padding:.75rem 0">{p.use}</td>
+                <td><span style={`display:inline-block;padding:.2rem .7rem;border-radius:.4rem;background:${p.bgHex};color:${p.fgHex};border:1px solid var(--line);font-size:1.5rem;font-weight:700`}>Aa</span></td>
+                <td style="text-align:right;font-variant-numeric:tabular-nums">{p.ratio.toFixed(2)}:1</td>
+                <td style="text-align:right;font-variant-numeric:tabular-nums">{p.min}:1</td>
+                <td style="text-align:right">{p.ok ? 'Cumple' : 'NO cumple'}{p.ratio >= 7 ? ' · AAA' : ''}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion--compacta seccion" data-tone="light" aria-labelledby="ds-tipo">
+    <div class="contenedor">
+      <h2 id="ds-tipo" style="font-size:var(--step-3);margin-bottom:2rem">Tipografía</h2>
+      <p style="margin-bottom:2rem;color:var(--text-muted)">Funnel Display (títulos) · DM Sans (texto e interfaz) · DM Serif Text cursiva (acento editorial).</p>
+      {muestra.map(([n, etq]) => (
+        <div style="display:flex;align-items:baseline;gap:1.5rem;border-top:1px solid var(--line);padding-block:.9rem;flex-wrap:wrap">
+          <span style="width:11rem;font-size:var(--step--1);color:var(--text-muted)">step-{n} · {etq}</span>
+          <span style={`font-family:var(--font-display);font-weight:700;letter-spacing:var(--tracking-heading);font-size:var(--step-${n});line-height:1.1`}>Tu marca al nivel <em class="acento" style={Number(n) < 2 ? 'color:var(--accent-text)' : undefined}>que merece</em></span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="seccion--compacta seccion" data-tone="dark" aria-labelledby="ds-comp">
+    <div class="contenedor">
+      <h2 id="ds-comp" style="font-size:var(--step-3);margin-bottom:2rem">Componentes</h2>
+      <div style="display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:2rem">
+        <a class="boton boton--coral" href="#ds-comp">Coral</a>
+        <a class="boton boton--tinta" href="#ds-comp">Tinta</a>
+        <a class="boton boton--contorno" href="#ds-comp">Contorno</a>
+        <a class="boton boton--coral" href="#ds-comp">Con icono <Icono nombre="flecha" /></a>
+        <button class="boton boton--coral" disabled>Deshabilitado</button>
+      </div>
+      <ul class="chips tono-lavender"><li><a class="chip tono-coral" href="#ds-comp">Branding</a></li><li><a class="chip tono-lavender" href="#ds-comp">Web</a></li><li><a class="chip tono-yellow" href="#ds-comp">Producto</a></li><li><a class="chip tono-green" href="#ds-comp">Estrategia</a></li></ul>
+      <form class="formulario" style="margin-top:2.5rem" onsubmit="return false">
+        <div class="campo"><label class="campo__etiqueta" for="ds-i">Campo de texto</label><input id="ds-i" placeholder="Escribe aquí" /></div>
+        <div class="campo"><label class="campo__etiqueta" for="ds-e">Campo con error</label><input id="ds-e" aria-invalid="true" aria-describedby="ds-e-err" value="correo-sin-arroba" /><p class="campo__error" id="ds-e-err">Revisa el email: parece que falta algo.</p></div>
+      </form>
+    </div>
+  </section>
+</Base>

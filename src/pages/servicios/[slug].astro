@@ -1,0 +1,10 @@
+---
+import ServicioDetalle from '../../views/ServicioDetalle.astro';
+import { servicios } from '../../data/servicios';
+
+export function getStaticPaths() {
+  return servicios.map((s) => ({ params: { slug: s.slug } }));
+}
+const { slug } = Astro.params;
+---
+<ServicioDetalle locale="es" slug={slug!} />
